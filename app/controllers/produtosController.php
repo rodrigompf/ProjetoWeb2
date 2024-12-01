@@ -2,21 +2,20 @@
 
 require_once '../app/models/produtosModel.php';
 
-class produtosController
+class ProdutosController
 {
-
     public function index(): void
     {
-        // Check if a category is passed in the URL
-        $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
-
         $produtosModel = new ProdutosModel();
-        $produtosView = $produtosModel->getAllProdutos($categoria); // Pass category to the model
+
+        // Capturar a categoria da URL
+        $categoria = $_GET['categoria'] ?? null;
+
+        // Buscar os produtos apenas se uma categoria for especificada
+        $produtosView = $categoria ? $produtosModel->getAllProdutos($categoria) : [];
 
         require_once '../app/views/produtosView.php';
     }
-
-
 
     public function create(): void
     {
