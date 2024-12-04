@@ -13,21 +13,21 @@ class ProdutosModel
 
     public function getAllProdutos($categoria = null): array
     {
-        // Iniciar a query
+        // Start the query
         $query = "
         SELECT p.*, c.nome AS categoria_nome
         FROM produtos p
         LEFT JOIN categorias c ON p.categoria_id = c.id
     ";
 
-        // Adicionar filtro de categoria, se especificado
+        // Add category filter if specified
         if ($categoria) {
             $query .= " WHERE c.nome = :categoria";
         }
 
         $stat = $this->db->prepare($query);
 
-        // Passar o parâmetro de categoria, se necessário
+        // Bind category parameter if needed
         if ($categoria) {
             $stat->bindParam(':categoria', $categoria);
         }
@@ -36,9 +36,6 @@ class ProdutosModel
 
         return $stat->fetchAll();
     }
-
-
-
 
     public function insert(string $nome, int $categoria_id, ?string $imagem): bool
     {
@@ -66,3 +63,4 @@ class ProdutosModel
         return $stat->fetchAll();
     }
 }
+?>
