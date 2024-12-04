@@ -1,0 +1,3 @@
+O trabalho baseia-se em um site de um supermercado onde é possível comprar uma vasta variedade de produtos, ao mesmo tempo em que se pode gerir o stock de forma eficiente,
+mantendo a organização do supermercado. Além disso, o sistema oferece funcionalidades de monitorização de preços e promoções, facilitando a otimização do inventário.
+Assim, é possível que a experiência de compra para os clientes e a eficiência operacional do supermercado seja melhor.
