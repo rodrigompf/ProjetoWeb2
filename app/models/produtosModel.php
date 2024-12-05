@@ -62,5 +62,12 @@ class ProdutosModel
         $stat->execute([':categoria' => $categoria]);
         return $stat->fetchAll();
     }
+    public function getProductsByCategory($category)
+{
+    $query = "SELECT * FROM products WHERE category = :category"; // Assuming `category` column exists
+    $stmt = $this->db->prepare($query);
+    $stmt->execute([':category' => $category]);
+    return $stmt->fetchAll();
+}
 }
 ?>

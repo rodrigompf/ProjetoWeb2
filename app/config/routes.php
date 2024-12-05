@@ -17,6 +17,19 @@ return [
         'controller' => 'produtosController',
         'action' => 'store'
     ],
-]
+    'login' => [
+        'controller' => 'AuthController',
+        'action' => 'login',
+    ],
+    'register' => [
+        'controller' => 'AuthController',
+        'action' => 'register',
+    ],
+    'logout' => [
+        'controller' => 'AuthController',
+        'action' => 'logout',
+    ]
+    
+];
 
 ?>

@@ -44,4 +44,5 @@ class ProdutosController
             echo "Erro ao criar produto.";
         }
     }
+    
 }

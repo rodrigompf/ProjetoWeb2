@@ -10,10 +10,11 @@ class Connection
     {
         if (self::$instance === null) {
             try {
+                // Use the 'login' database instead of 'supermarket'
                 self::$instance = new PDO(
-                    'mysql:host=localhost;dbname=supermarket',
-                    'root', // Username
-                    '',     // Password
+                    'mysql:host=localhost;dbname=supermarket',  // Change this line
+                    'root',
+                    '',     
                     [
                         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -27,5 +28,6 @@ class Connection
         return self::$instance;
     }
 }
+
 
 ?>
