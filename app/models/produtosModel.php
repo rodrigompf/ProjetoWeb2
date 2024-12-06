@@ -11,30 +11,42 @@ class ProdutosModel
         $this->db = Connection::getInstance();
     }
 
-    public function getAllProdutos($categoria = null): array
+    public function getProdutosByCategorias(): array
     {
-        // Start the query
         $query = "
-        SELECT p.*, c.nome AS categoria_nome
-        FROM produtos p
-        LEFT JOIN categorias c ON p.categoria_id = c.id
-    ";
-
-        // Add category filter if specified
-        if ($categoria) {
-            $query .= " WHERE c.nome = :categoria";
-        }
-
+            SELECT p.*, c.nome AS categoria_nome
+            FROM produtos p
+            JOIN categorias c ON p.categoria_id = c.id
+            ORDER BY c.nome, p.nome
+        ";
         $stat = $this->db->prepare($query);
-
-        // Bind category parameter if needed
-        if ($categoria) {
-            $stat->bindParam(':categoria', $categoria);
-        }
-
         $stat->execute();
 
-        return $stat->fetchAll();
+        $produtosPorCategorias = [];
+        foreach ($stat->fetchAll(PDO::FETCH_ASSOC) as $produto) {
+            $categoriaNome = $produto['categoria_nome'];
+            if (!isset($produtosPorCategorias[$categoriaNome])) {
+                $produtosPorCategorias[$categoriaNome] = [];
+            }
+            $produtosPorCategorias[$categoriaNome][] = $produto;
+        }
+
+        return $produtosPorCategorias;
+    }
+
+    public function getProdutosByCategoria(string $categoria): array
+    {
+        $query = "
+            SELECT p.*, c.nome AS categoria_nome
+            FROM produtos p
+            JOIN categorias c ON p.categoria_id = c.id
+            WHERE c.nome = :categoria
+            ORDER BY p.nome
+        ";
+        $stat = $this->db->prepare($query);
+        $stat->execute([':categoria' => $categoria]);
+
+        return $stat->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function insert(string $nome, int $categoria_id, ?string $imagem): bool
@@ -49,25 +61,30 @@ class ProdutosModel
         ]);
     }
 
-    public function getProdutosByCategoria(string $categoria): array
+    public function getAllCategorias(): array
     {
-        $query = "
-        SELECT p.*, c.nome AS categoria
-        FROM produtos p
-        LEFT JOIN categorias c ON p.categoria_id = c.id
-        WHERE c.nome = :categoria
-        ORDER BY p.nome
-    ";
+        $query = "SELECT * FROM categorias ORDER BY nome";
         $stat = $this->db->prepare($query);
-        $stat->execute([':categoria' => $categoria]);
-        return $stat->fetchAll();
+        $stat->execute();
+
+        return $stat->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getProductsByCategory($category)
-{
-    $query = "SELECT * FROM products WHERE category = :category"; // Assuming `category` column exists
-    $stmt = $this->db->prepare($query);
-    $stmt->execute([':category' => $category]);
-    return $stmt->fetchAll();
+
+    public function searchProdutosByCategoria(string $categoria, string $query): array
+    {
+        $query = "%$query%";
+        $sql = "
+        SELECT p.*, c.nome AS categoria_nome
+        FROM produtos p
+        JOIN categorias c ON p.categoria_id = c.id
+        WHERE c.nome = :categoria AND p.nome LIKE :query
+    ";
+
+        $stat = $this->db->prepare($sql);
+        $stat->bindParam(':categoria', $categoria);
+        $stat->bindParam(':query', $query);
+        $stat->execute();
+
+        return $stat->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
-}
-?>

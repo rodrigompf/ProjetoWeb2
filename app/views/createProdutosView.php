@@ -8,46 +8,46 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
-    <header class="bg-green-600 text-white p-4">
-        <div class="container mx-auto">
-            <h1 class="text-3xl font-bold">Criar Produto</h1>
-        </div>
-    </header>
-    <main class="container mx-auto p-6">
-        <form action="/produtos/store" method="post" enctype="multipart/form-data" class="bg-white shadow rounded p-6">
+<body class="bg-gray-100">
+    <div class="container mx-auto py-10">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Adicionar Novo Produto</h1>
+
+        <form action="/produtos/store" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md">
+            <!-- Nome do Produto -->
             <div class="mb-4">
-                <label for="nome" class="block text-gray-700 font-bold mb-2">Nome do Produto:</label>
-                <input type="text" id="nome" name="nome" required class="border rounded w-full py-2 px-3">
+                <label for="nome" class="block text-gray-700 font-semibold mb-2">Nome do Produto:</label>
+                <input type="text" name="nome" id="nome" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
+
+            <!-- Categoria -->
             <div class="mb-4">
-                <label for="categoria" class="block text-gray-700 font-bold mb-2">Categoria:</label>
-                <select id="categoria" name="categoria_id" required class="border rounded w-full py-2 px-3">
-                    <?php
-                    require_once '../app/models/categoriasModel.php';
-                    $categoriasModel = new CategoriasModel();
-                    $categorias = $categoriasModel->getAllCategorias();
-                    foreach ($categorias as $categoria): ?>
-                        <option value="<?php echo $categoria['id']; ?>">
-                            <?php echo htmlspecialchars($categoria['nome']); ?>
-                        </option>
-                    <?php endforeach; ?>
+                <label for="categoria_id" class="block text-gray-700 font-semibold mb-2">Categoria:</label>
+                <select name="categoria_id" id="categoria_id" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="" disabled selected>Selecione uma categoria</option>
+                    <option value="1">Peixe</option>
+                    <option value="2">Carne</option>
+                    <option value="3">Frutas</option>
                 </select>
             </div>
+
+            <!-- Imagem -->
             <div class="mb-4">
-                <label for="imagem" class="block text-gray-700 font-bold mb-2">Imagem do Produto:</label>
-                <input type="file" id="imagem" name="imagem" class="border rounded w-full py-2 px-3">
+                <label for="imagem" class="block text-gray-700 font-semibold mb-2">Imagem do Produto:</label>
+                <input type="file" name="imagem" id="imagem"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
-            <div class="mb-4">
-                <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded">Criar Produto</button>
+
+            <!-- Botão de Submissão -->
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Salvar Produto
+                </button>
             </div>
         </form>
-    </main>
-    <footer class="bg-gray-800 text-white py-4 mt-10">
-        <div class="container mx-auto text-center">
-            <p>© 2024 Supermercado Online. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    </div>
 </body>
 
 </html>

@@ -8,11 +8,11 @@ class ProdutosController
     {
         $produtosModel = new ProdutosModel();
 
-        // Capturar a categoria da URL
-        $categoria = $_GET['categoria'] ?? null;
+        // Obtenha os produtos organizados por categorias
+        $produtosPorCategorias = $produtosModel->getProdutosByCategorias();
 
-        // Buscar os produtos apenas se uma categoria for especificada
-        $produtosView = $categoria ? $produtosModel->getAllProdutos($categoria) : [];
+        // Obtenha todas as categorias para exibir no menu
+        $categorias = $produtosModel->getAllCategorias();
 
         require_once '../app/views/produtosView.php';
     }
@@ -44,5 +44,25 @@ class ProdutosController
             echo "Erro ao criar produto.";
         }
     }
-    
+
+    public function showCategoria(string $categoria): void
+    {
+        $produtosModel = new ProdutosModel();
+        $produtosView = $produtosModel->getProdutosByCategoria($categoria);
+
+        require_once '../app/views/categoriaView.php';
+    }
+
+    public function search(): void
+    {
+        $categoria = $_GET['categoria'] ?? '';
+        $query = $_GET['query'] ?? '';
+
+        $produtosModel = new ProdutosModel();
+        $produtos = $produtosModel->searchProdutosByCategoria($categoria, $query);
+
+        // Retorne os produtos em formato JSON
+        header('Content-Type: application/json');
+        echo json_encode($produtos);
+    }
 }

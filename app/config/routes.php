@@ -28,7 +28,16 @@ return [
     'logout' => [
         'controller' => 'AuthController',
         'action' => 'logout',
-    ]
+    ],
+    'produtos/categoria/{categoria}' => [
+    'controller' => 'produtosController',
+    'action' => 'showCategoria'
+    ],
+
+    'produtos/search' => [
+        'controller' => 'ProdutosController',
+        'action' => 'search'
+    ],
     
 ];
 
