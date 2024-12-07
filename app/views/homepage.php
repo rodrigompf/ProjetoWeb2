@@ -1,5 +1,7 @@
 <?php
-session_start(); // Start the session to check for login status
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 
 <!DOCTYPE html>
@@ -12,21 +14,12 @@ session_start(); // Start the session to check for login status
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
-    <header class="bg-green-600 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">Supermercado Online</h1>
-            <div>
-                <?php if (isset($_SESSION['user'])): ?>
-                    <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Logout</a>
-                <?php else: ?>
-                    <a href="/login" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Login</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </header>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <!-- Cabeçalho -->
+    <?php include '../app/views/header.php'; ?>
 
-    <main class="container mx-auto p-6">
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto p-6 flex-grow">
         <div class="text-center">
             <h2 class="text-2xl font-semibold mb-4">Bem-vindo ao nosso Supermercado!</h2>
             <nav>
@@ -36,9 +29,36 @@ session_start(); // Start the session to check for login status
                 </ul>
             </nav>
         </div>
+
+        <section class="mt-8">
+            <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <?php if (!empty($produtosComDesconto)): ?>
+                    <div class="offers-banner">
+                        <h2>Ofertas Imperdíveis!</h2>
+                        <div class="products">
+                            <?php foreach ($produtosComDesconto as $produto): ?>
+                                <div class="product">
+                                    <img src="<?= $produto['imagem'] ?>" alt="<?= $produto['nome'] ?>">
+                                    <h3><?= $produto['nome'] ?></h3>
+                                    <p>Preço Original: <?= number_format($produto['preco'], 2) ?>€</p>
+                                    <p>Preço com Desconto: <?= number_format($produto['preco_com_desconto'], 2) ?>€</p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <p>Nenhuma oferta disponível no momento.</p>
+                <?php endif; ?>
+
+            </div>
+        </section>
+
+
     </main>
 
-    <footer class="bg-gray-800 text-white py-4 mt-10">
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-4">
         <div class="container mx-auto text-center">
             <p>© 2024 Supermercado Online. Todos os direitos reservados.</p>
         </div>

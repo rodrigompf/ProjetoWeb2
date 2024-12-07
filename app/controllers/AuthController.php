@@ -29,21 +29,22 @@ class AuthController
         require_once '../app/views/registerView.php';
     }
 
-    public function login() {
+    public function login()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Retrieve form data
             $email = $_POST['email'];
             $password = $_POST['password'];
-    
+
             // Attempt to authenticate the user
             $user = $this->userModel->login($email, $password);
-    
+
             // Check if the user exists and password matches
             if ($user) {
                 // Start a session and store user data
                 session_start();
                 $_SESSION['user'] = $user;
-    
+
                 // Redirect to the home page or any other page after successful login
                 header('Location: /');  // Assuming / is the homepage route
                 exit;
@@ -52,21 +53,22 @@ class AuthController
                 $error = "Invalid email or password.";
             }
         }
-    
+
         // Render the login view
         require_once '../app/views/loginView.php';
     }
-    
+
 
 
     public function logout()
-{
-    session_start();    // Start the session
-    session_unset();    // Remove all session variables
-    session_destroy();  // Destroy the session
-    header('Location: /'); // Redirect to the home page after logout
-    exit();
-}
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
+        session_unset();
+        session_destroy();
+        header('Location: /'); // Redireciona para a página inicial
+        exit();
+    }
 }
-?>

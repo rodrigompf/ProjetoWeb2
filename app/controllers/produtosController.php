@@ -4,14 +4,35 @@ require_once '../app/models/produtosModel.php';
 
 class ProdutosController
 {
+    public function home(): void
+    {
+        $produtosModel = new ProdutosModel();
+
+        // Fetch discounted products for the banner
+        $produtosComDesconto = $produtosModel->getRandomDiscountedProducts(5);
+
+        echo "<pre>";
+        var_dump($produtosComDesconto); // Check what data is being returned
+        echo "</pre>";
+
+        // If no discounted products exist, fetch any 5 random products
+        if (empty($produtosComDesconto)) {
+            $produtosComDesconto = $produtosModel->getRandomProducts(5);
+        }
+
+        // Pass products to the view
+        require_once '../app/views/homepage.php';
+    }
+
+
     public function index(): void
     {
         $produtosModel = new ProdutosModel();
 
-        // Obtenha os produtos organizados por categorias
+        // Fetch products grouped by categories
         $produtosPorCategorias = $produtosModel->getProdutosByCategorias();
 
-        // Obtenha todas as categorias para exibir no menu
+        // Fetch all categories for display
         $categorias = $produtosModel->getAllCategorias();
 
         require_once '../app/views/produtosView.php';
@@ -29,7 +50,7 @@ class ProdutosController
         $imagem = $_FILES['imagem']['name'];
         $imagemPath = null;
 
-        // Faz o upload da imagem, se houver
+        // Upload image if provided
         if (!empty($imagem)) {
             $imagemPath = 'uploads/' . basename($imagem);
             move_uploaded_file($_FILES['imagem']['tmp_name'], $imagemPath);
@@ -39,7 +60,7 @@ class ProdutosController
         $result = $produtosModel->insert($nome, $categoria_id, $imagemPath);
 
         if ($result) {
-            $this->index(); // Redireciona para a lista de produtos
+            $this->index(); // Redirect to the products list
         } else {
             echo "Erro ao criar produto.";
         }
@@ -48,6 +69,8 @@ class ProdutosController
     public function showCategoria(string $categoria): void
     {
         $produtosModel = new ProdutosModel();
+
+        // Fetch products for a specific category
         $produtosView = $produtosModel->getProdutosByCategoria($categoria);
 
         require_once '../app/views/categoriaView.php';
@@ -59,9 +82,11 @@ class ProdutosController
         $query = $_GET['query'] ?? '';
 
         $produtosModel = new ProdutosModel();
+
+        // Fetch products based on search query and category
         $produtos = $produtosModel->searchProdutosByCategoria($categoria, $query);
 
-        // Retorne os produtos em formato JSON
+        // Return products in JSON format
         header('Content-Type: application/json');
         echo json_encode($produtos);
     }
