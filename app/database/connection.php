@@ -1,7 +1,5 @@
 <?php
 
-// Este ficheiro vai servir para criar uma conexão à base de dados
-
 class Connection
 {
     private static $instance = null;
@@ -10,24 +8,22 @@ class Connection
     {
         if (self::$instance === null) {
             try {
-                // Use the 'login' database instead of 'supermarket'
                 self::$instance = new PDO(
-                    'mysql:host=localhost;dbname=supermarket',  // Change this line
+                    'mysql:host=localhost;dbname=supermarket',
                     'root',
-                    '',     
+                    '',
                     [
                         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     ]
                 );
             } catch (PDOException $e) {
-                echo 'ERROR: ' . $e->getMessage();
+                echo 'Database connection error: ' . $e->getMessage();
                 return null;
             }
         }
         return self::$instance;
     }
 }
-
 
 ?>

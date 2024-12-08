@@ -42,10 +42,11 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
                 <ul class="flex justify-center gap-6">
                     <li><a href="/produtos" class="text-green-600 underline">Ver Produtos</a></li>
                     <?php if ($isAdmin): ?>
-                        <li><a href="/produtos/create" class="text-green-600 underline">Adicionar Novo Produto</a></li>
+                        <li><a href="adminZone" class="text-green-600 underline">Adicionar Novo Produto</a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
+
         </div>
 
         <!-- Ofertas Imperdíveis Section -->
