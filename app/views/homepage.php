@@ -1,7 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start(); // Certifique-se de que a sessão esteja iniciada
+$isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verifica se o usuário está logado e é administrador
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +41,9 @@ if (session_status() === PHP_SESSION_NONE) {
             <nav>
                 <ul class="flex justify-center gap-6">
                     <li><a href="/produtos" class="text-green-600 underline">Ver Produtos</a></li>
-                    <li><a href="/produtos/create" class="text-green-600 underline">Adicionar Novo Produto</a></li>
+                    <?php if ($isAdmin): ?>
+                        <li><a href="/produtos/create" class="text-green-600 underline">Adicionar Novo Produto</a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         </div>

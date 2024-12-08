@@ -16,12 +16,32 @@
             if (produtos.length > 0) {
                 produtos.forEach(produto => {
                     const li = document.createElement('li');
-                    li.className = 'bg-white border rounded-lg shadow p-4';
+                    li.className = 'bg-white border rounded-lg shadow relative overflow-hidden';
                     li.innerHTML = `
-                        <img src="/assets/${produto.imagem}" alt="${produto.nome}" class="w-full h-48 object-cover rounded-t-lg">
-                        <h3 class="text-lg font-bold mt-2">${produto.nome}</h3>
-                        <p class="text-gray-600">${produto.descricao}</p>
-                        <p class="text-lg text-gray-800 font-bold mt-4">€${produto.preco}</p>
+                        <div class="relative">
+                            <img src="/assets/${produto.imagem}" alt="${produto.nome}" class="w-full h-48 object-cover">
+                            ${
+                                produto.discount_price
+                                    ? `<div class="absolute top-2 left-2 bg-red-500 text-white text-sm font-bold rounded-full px-3 py-1 shadow-lg">
+                                    -${produto.discount_price}%
+                                </div>`
+                                    : ''
+                            }
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold">${produto.nome}</h3>
+                            <div class="flex items-center mt-2">
+                                ${
+                                    produto.precoDescontado < produto.preco
+                                        ? `
+                                    <p class="text-gray-500 line-through mr-2">€${produto.preco}</p>
+                                    <p class="text-lg font-bold text-gray-900">€${produto.precoDescontado}</p>
+                                `
+                                        : `<p class="text-lg font-bold text-gray-900">€${produto.preco}</p>`
+                                }
+                            </div>
+                            <p class="text-gray-600 mt-2">${produto.descricao}</p>
+                        </div>
                     `;
                     produtosList.appendChild(li);
                 });
@@ -54,19 +74,19 @@
 
         <ul id="produtos-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <?php foreach ($produtosView as $produto): ?>
-                <li class="bg-white border rounded-lg shadow overflow-hidden">
-                    <?php if ($produto['precoDescontado'] < $produto['preco']): ?>
-                        <div class="absolute top-0 left-0 bg-red-500 text-white text-lg font-bold rounded-full px-4 py-2 m-2 shadow-lg">
-                            -<?php echo $produto['discount_price']; ?>%
-                        </div>
-                    <?php endif; ?>
-
-                    <img src="/assets/<?php echo htmlspecialchars($produto['imagem']); ?>" alt="<?php echo htmlspecialchars($produto['nome']); ?>" class="w-full h-48 object-cover rounded-t-lg">
+                <li class="bg-white border rounded-lg shadow relative overflow-hidden">
+                    <div class="relative">
+                        <img src="/assets/<?php echo htmlspecialchars($produto['imagem']); ?>" alt="<?php echo htmlspecialchars($produto['nome']); ?>" class="w-full h-48 object-cover">
+                        <?php if ($produto['precoDescontado'] < $produto['preco']): ?>
+                            <div class="absolute top-2 left-2 bg-red-500 text-white text-sm font-bold rounded-full px-3 py-1 shadow-lg">
+                                -<?php echo $produto['discount_price']; ?>%
+                            </div>
+                        <?php endif; ?>
+                    </div>
 
                     <div class="p-4">
-                        <h3 class="text-lg font-bold mb-2"><?php echo htmlspecialchars($produto['nome']); ?></h3>
-
-                        <div class="flex items-center">
+                        <h3 class="text-lg font-bold"><?php echo htmlspecialchars($produto['nome']); ?></h3>
+                        <div class="flex items-center mt-2">
                             <?php if ($produto['precoDescontado'] < $produto['preco']): ?>
                                 <p class="text-gray-500 line-through mr-2">
                                     €<?php echo number_format($produto['preco'], 2); ?>
@@ -80,7 +100,6 @@
                                 </p>
                             <?php endif; ?>
                         </div>
-
                         <p class="text-gray-600 mt-2">
                             <?php echo htmlspecialchars($produto['descricao']); ?>
                         </p>
