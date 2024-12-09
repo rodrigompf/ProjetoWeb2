@@ -15,10 +15,10 @@
         </a>
 
 
-        <button 
+        <a href="/produtos/edit" 
             class="px-4 py-2 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 transition">
             Editar Produto
-        </button>
+            </a>
     </div>
 </body>
 </html>

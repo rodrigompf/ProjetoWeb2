@@ -49,6 +49,18 @@ return [
         'controller' => 'ProdutosController',
         'action' => 'search'
     ],
+    'produtos/edit' => [
+        'controller' => 'AdminController',
+        'action' => 'editList'
+    ],
+    'produtos/edit/{id}' => [
+        'controller' => 'AdminController',
+        'action' => 'editForm'
+    ],
+    'produtos/delete/{id}' => [
+    'controller' => 'AdminController',
+    'action' => 'delete'
+    ],
 ];
 
 
