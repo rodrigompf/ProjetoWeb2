@@ -1,6 +1,6 @@
 <?php
 
-require_once '../app/models/produtosModel.php';
+require_once './app/models/produtosModel.php';
 
 class ProdutosController
 {
@@ -14,7 +14,7 @@ class ProdutosController
         // Obtenha todas as categorias para exibir no menu
         $categorias = $produtosModel->getAllCategorias();
 
-        require_once '../app/views/produtosView.php';
+        require_once './app/views/produtosView.php';
     }
 
     public function create(): void
@@ -51,7 +51,7 @@ class ProdutosController
         $produtosModel = new ProdutosModel();
         $produtosView = $produtosModel->getProdutosByCategoria($categoria);
 
-        require_once '../app/views/categoriaView.php';
+        require_once './app/views/categoriaView.php';
     }
 
     public function search(): void

@@ -4,7 +4,7 @@
 $route = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 // Carregar as rotas
-$routes = require_once '../app/config/routes.php';
+$routes = require_once './app/config/routes.php';
 
 // Verificar se a rota existe
 if (array_key_exists($route, $routes)) {
@@ -13,7 +13,7 @@ if (array_key_exists($route, $routes)) {
     $actionName = $routes[$route]['action'];
 
     // Carregar o controlador
-    require_once '../app/controllers/' . $controllerName . '.php';
+    require_once './app/controllers/' . $controllerName . '.php';
 
     // Instanciar o controlador e chamar a ação
     $controller = new $controllerName();
@@ -31,7 +31,7 @@ if (array_key_exists($route, $routes)) {
             $actionName = $routeInfo['action'];
 
             // Carregar o controlador
-            require_once '../app/controllers/' . $controllerName . '.php';
+            require_once './app/controllers/' . $controllerName . '.php';
 
             // Instanciar o controlador e chamar a ação com os parâmetros
             $controller = new $controllerName();

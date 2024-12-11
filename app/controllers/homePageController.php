@@ -1,6 +1,6 @@
 <?php
 
-require_once '../app/models/homeModel.php';
+require_once './app/models/homeModel.php';
 
 class HomePageController
 {
@@ -10,7 +10,7 @@ class HomePageController
         
         $produtosComDesconto = $homeModel->getProdutosComDesconto();
         
-        require_once '../app/views/homepage.php';
+        require_once './app/views/homepage.php';
     }
 }
 

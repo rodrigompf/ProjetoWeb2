@@ -1,11 +1,11 @@
 <?php
 
-require_once '../app/database/Connection.php';
+require_once './app/database/Connection.php';
 
 class AdminController {
 
     public function index() {
-        require_once '../app/views/adminView.php';
+        require_once './app/views/adminView.php';
     }
 
     public function create() {
@@ -96,7 +96,7 @@ class AdminController {
     }
 
     // Include the view with feedback
-    require_once '../app/views/createProdutosView.php';
+    require_once './app/views/createProdutosView.php';
 }
 
     public function editList() {
@@ -115,7 +115,7 @@ class AdminController {
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
     
-        require_once '../app/views/editListView.php';
+        require_once './app/views/editListView.php';
     }
     
     public function editForm($id) {
@@ -207,7 +207,7 @@ class AdminController {
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
     
-        require_once '../app/views/editFormView.php';
+        require_once './app/views/editFormView.php';
     }
     
     public function delete($id) {
