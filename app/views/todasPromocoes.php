@@ -1,27 +1,31 @@
 <?php
-session_start(); // Certifique-se de que a sessão esteja iniciada
-$isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verifica se o usuário está logado e é administrador
-?>
+session_start();
+require_once '../app/models/homeModel.php';
 
+// Instanciar a classe HomeModel
+$homeModel = new HomeModel();
+
+// Obter os produtos com desconto
+$produtosComDesconto = $homeModel->getProdutosComDesconto();
+?>
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supermercado Online</title>
+    <title>Todas as Promoções</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Horizontal Scroll Container */
         .offers-container {
             display: flex;
-            overflow-x: auto;
-            padding-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
         }
 
         .product {
-            min-width: 250px;
-            max-width: 250px;
+            width: 250px;
             margin-right: 16px;
         }
 
@@ -31,43 +35,31 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
         }
     </style>
 </head>
-
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <!-- Cabeçalho -->
     <?php include '../app/views/header.php'; ?>
 
     <!-- Conteúdo Principal -->
     <main class="container mx-auto p-6 flex-grow">
-        <div class="text-center">
-            <h2 class="text-2xl font-semibold mb-4">Bem-vindo ao nosso Supermercado!</h2>
-            <nav>
-                <ul class="flex justify-center gap-6">
-                    <li><a href="/produtos" class="text-green-600 underline">Ver Produtos</a></li>
-                    <?php if ($isAdmin): ?>
-                        <li><a href="adminZone" class="text-green-600 underline">Adicionar Novo Produto</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
+        <h1 class="text-2xl font-semibold text-center text-green-600 mb-4">Todas as Promoções</h1>
 
-        </div>
-
+        <!-- Ofertas em Grade -->
         <section class="mt-8">
-            <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
-
-            <!-- Scroll Container -->
             <div class="offers-container">
                 <?php if (!empty($produtosComDesconto)): ?>
                     <?php foreach ($produtosComDesconto as $produto): ?>
                         <div class="product rounded-lg shadow-md overflow-hidden bg-white p-4 transform hover:scale-105 transition-transform">
-                            <?php if (isset($produto['imagem']) && !empty($produto['imagem'])): ?>
-                                <img src="<?= "../../assets/" . $produto['imagem'] ?>" alt="<?= $produto['nome'] ?>" class="w-full h-48 object-cover">
+                            <?php if (!empty($produto['imagem'])): ?>
+                                <img src="<?= "../../assets/" . htmlspecialchars($produto['imagem']) ?>" 
+                                     alt="<?= htmlspecialchars($produto['nome']) ?>" 
+                                     class="w-full h-48 object-cover">
                             <?php else: ?>
                                 <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
                                     <span class="text-gray-600">No Image</span>
                                 </div>
                             <?php endif; ?>
 
-                            <h3 class="mt-2 text-lg font-bold"><?= $produto['nome'] ?></h3>
+                            <h3 class="mt-2 text-lg font-bold"><?= htmlspecialchars($produto['nome']) ?></h3>
                             <p class="text-gray-500">
                                 Preço Original: <span class="line-through"><?= number_format($produto['preco'], 2) ?>€</span>
                             </p>
@@ -77,18 +69,10 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="text-gray-500 mt-4">Nenhuma oferta disponível no momento.</p>
+                    <p class="text-gray-500 mt-4 text-center">Nenhuma oferta disponível no momento.</p>
                 <?php endif; ?>
             </div>
-
-            <!-- Botão para ver todas as promoções -->
-            <div class="text-center mt-4">
-                <a href="todasPromocoes.php" class="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 transition">
-                    Ver Todas as Promoções
-                </a>
-            </div>
         </section>
-
     </main>
 
     <!-- Rodapé -->
@@ -98,5 +82,4 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
         </div>
     </footer>
 </body>
-
 </html>
