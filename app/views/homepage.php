@@ -83,7 +83,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
 
             <!-- Botão para ver todas as promoções -->
             <div class="text-center mt-4">
-                <a href="todasPromocoes.php" class="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 transition">
+                <a href="/todasPromocoes" class="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 transition">
                     Ver Todas as Promoções
                 </a>
             </div>

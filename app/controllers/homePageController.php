@@ -6,8 +6,8 @@ class HomePageController
 {
     public function index(): void
     {
-        $homeModel = new HomeModel();
         
+        $homeModel = new HomeModel();
         $produtosComDesconto = $homeModel->getProdutosComDesconto();
         
         require_once './app/views/homepage.php';

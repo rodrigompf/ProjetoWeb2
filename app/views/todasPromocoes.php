@@ -1,12 +1,10 @@
 <?php
 session_start();
-require_once '../app/models/homeModel.php';
 
-// Instanciar a classe HomeModel
-$homeModel = new HomeModel();
-
-// Obter os produtos com desconto
-$produtosComDesconto = $homeModel->getProdutosComDesconto();
+// Certifique-se de que a variável $produtosComDesconto seja passada pelo controlador
+if (!isset($produtosComDesconto)) {
+    die('Erro: Produtos não encontrados.'); // Mensagem para caso a variável não esteja definida
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -16,7 +14,7 @@ $produtosComDesconto = $homeModel->getProdutosComDesconto();
     <title>Todas as Promoções</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Horizontal Scroll Container */
+        /* Estilos */
         .offers-container {
             display: flex;
             flex-wrap: wrap;
@@ -37,7 +35,7 @@ $produtosComDesconto = $homeModel->getProdutosComDesconto();
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <!-- Cabeçalho -->
-    <?php include '../app/views/header.php'; ?>
+    <?php include './app/views/header.php'; ?>
 
     <!-- Conteúdo Principal -->
     <main class="container mx-auto p-6 flex-grow">

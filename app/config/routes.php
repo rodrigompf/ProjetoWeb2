@@ -57,6 +57,5 @@ return [
         'controller' => 'PromocoesController',
         'action' => 'index'
     ],
-];
-
+]
 ?>
