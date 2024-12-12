@@ -29,6 +29,31 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             height: 200px;
             object-fit: cover;
         }
+
+        /* Estilo para o Banner */
+        .banner-container {
+            position: relative;
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .banner-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .banner {
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -42,14 +67,27 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             <h2 class="text-2xl font-semibold mb-4">Bem-vindo ao nosso Supermercado!</h2>
             <nav>
                 <ul class="flex justify-center gap-6">
-                    <li><a href="/produtos" class="text-green-600 underline">Ver Produtos</a></li>
+                    <!-- Botão de Ver Produtos -->
+                    <div class="text-center mt-4">
+                        <a href="/produtos" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
+                            Ver Produtos
+                        </a>
+                    </div>
                     <?php if ($isAdmin): ?>
                         <li><a href="adminZone" class="text-green-600 underline">Adicionar Novo Produto</a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
-
         </div>
+
+        <!-- Banners rotativos de alimentos -->
+        <section class="mt-8">
+            <div class="banner-container" id="banner-container">
+                <div class="banner" id="banner">
+                    <!-- As imagens serão inseridas dinamicamente aqui -->
+                </div>
+            </div>
+        </section>
 
         <section class="mt-8">
             <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
@@ -82,13 +120,12 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             </div>
 
             <!-- Botão para ver todas as promoções -->
-            <div class="text-center mt-4">
-                <a href="/todasPromocoes" class="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 transition">
-                    Ver Todas as Promoções
-                </a>
-            </div>
+                <div class="text-center mt-4">
+                        <a href="/todasPromocoes" class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-red-700 focus:outline-none">
+                            Ver todas as promoções
+                        </a>
+                    </div>
         </section>
-
     </main>
 
     <!-- Rodapé -->
@@ -97,6 +134,54 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             <p>© 2024 Supermercado Online. Todos os direitos reservados.</p>
         </div>
     </footer>
+
+    <script>
+        // Chave de API do Unsplash
+        const UNSPLASH_API_KEY = 'API_KEY';
+        const bannerContainer = document.getElementById('banner');
+
+        // Função para buscar imagens de comida
+        async function fetchFoodImages() {
+            try {
+                const response = await fetch(`https://api.unsplash.com/photos/random?query=food&count=4&client_id=${UNSPLASH_API_KEY}`);
+                const images = await response.json();
+
+                // Adiciona as imagens no banner
+                images.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image.urls.regular;
+                    img.alt = "Imagem de comida";
+                    bannerContainer.appendChild(img);
+                });
+
+                // Inicia a rotação das imagens após o carregamento
+                changeBanner();
+            } catch (error) {
+                console.error('Erro ao buscar as imagens:', error);
+            }
+        }
+
+        // Função para mudar as imagens do banner
+        let currentIndex = 0;
+        let bannerImages = []; // Para armazenar as imagens carregadas
+
+        function changeBanner() {
+            // Carrega todas as imagens para a rotação
+            bannerImages = document.querySelectorAll('#banner img');
+            const totalImages = bannerImages.length;
+
+            if (totalImages > 0) {
+                bannerImages[currentIndex].style.opacity = 0; // Esconde a imagem atual
+                currentIndex = (currentIndex + 1) % totalImages;
+                bannerImages[currentIndex].style.opacity = 1; // Mostra a nova imagem
+            }
+        }
+
+        // Muda a cada 10 segundos
+        setInterval(changeBanner, 10000);
+
+        fetchFoodImages(); // Chama a função para carregar as imagens de comida
+    </script>
 </body>
 
 </html>
