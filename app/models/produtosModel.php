@@ -49,6 +49,25 @@ class ProdutosModel
 
     return $produtosPorCategorias;
 }
+public function getProdutoById($product_id) {
+    $query = $this->db->prepare("SELECT * FROM produtos WHERE id = :id");
+    $query->execute(['id' => $product_id]);
+    $produto = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($produto) {
+        // Handle discount price fallback
+        if (!isset($produto['discount_price']) || $produto['discount_price'] === NULL) {
+            $produto['discount_price'] = $produto['preco'];
+        }
+
+        return $produto;
+    }
+
+    return false;
+}
+
+
+
 
 
 
@@ -123,5 +142,6 @@ public function getProdutosByCategoria(string $categoria): array
 
         return $stat->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 }
 ?>

@@ -16,12 +16,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <!-- Cabeçalho -->
-    <header class="bg-green-600 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">Supermercado Online</h1>
-        </div>
-    </header>
-
+    <?php include './app/views/header.php'; ?>
     <!-- Conteúdo Principal -->
     <main class="container mx-auto p-6 flex-grow flex items-center justify-center">
         <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">

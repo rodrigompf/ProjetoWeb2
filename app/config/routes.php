@@ -57,5 +57,17 @@ return [
         'controller' => 'PromocoesController',
         'action' => 'index'
     ],
+    'cart' => [
+    'controller' => 'CartController',
+    'action' => 'index'
+    ],
+    'cart/add/{id}' => [
+        'controller' => 'CartController',
+        'action' => 'add'
+    ],
+    'cart/remove/{id}' => [
+        'controller' => 'CartController',
+        'action' => 'remove'
+    ],
 ]
 ?>

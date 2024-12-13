@@ -13,20 +13,7 @@ session_start(); // Certifique-se de que a sessão esteja iniciada
 </head>
 
 <body class="bg-gray-100">
-    <header class="bg-green-600 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">Categorias</h1>
-            <div>
-                <?php if (isset($_SESSION['user'])): ?>
-                    <!-- Botão de Logout -->
-                    <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Logout</a>
-                <?php else: ?>
-                    <!-- Botão de Login -->
-                    <a href="/login" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Login</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </header>
+    <?php include './app/views/header.php'; ?>
 
     <div class="container mx-auto py-10">
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Explore Nossas Categorias</h1>
