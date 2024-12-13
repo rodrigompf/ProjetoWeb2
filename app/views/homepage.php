@@ -69,13 +69,21 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
                 <ul class="flex justify-center gap-6">
                     <!-- Botão de Ver Produtos -->
                     <div class="text-center mt-4">
+                        <!-- Ver Produtos Button -->
                         <a href="/produtos" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
                             Ver Produtos
                         </a>
                     </div>
+
                     <?php if ($isAdmin): ?>
-                        <li><a href="adminZone" class="text-green-600 underline">Adicionar Novo Produto</a></li>
+                        <!-- Adicionar Novo Produto Button -->
+                        <div class="text-center mt-4">
+                            <a href="adminZone" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
+                                Adicionar Novo Produto
+                            </a>
+                        </div>
                     <?php endif; ?>
+
                 </ul>
             </nav>
         </div>
@@ -93,39 +101,43 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
 
             <!-- Scroll Container -->
-            <div class="offers-container">
-                <?php if (!empty($produtosComDesconto)): ?>
-                    <?php foreach ($produtosComDesconto as $produto): ?>
-                        <div class="product rounded-lg shadow-md overflow-hidden bg-white p-4 transform hover:scale-105 transition-transform">
-                            <?php if (isset($produto['imagem']) && !empty($produto['imagem'])): ?>
-                                <img src="<?= "../../assets/" . $produto['imagem'] ?>" alt="<?= $produto['nome'] ?>" class="w-full h-48 object-cover">
-                            <?php else: ?>
-                                <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
-                                    <span class="text-gray-600">No Image</span>
+            <section class="mt-8">
+                <div class="offers-container">
+                    <?php if (!empty($produtosComDesconto)): ?>
+                        <?php foreach ($produtosComDesconto as $produto): ?>
+                            <div class="product bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition-all duration-200">
+                                <?php if (!empty($produto['imagem'])): ?>
+                                    <img src="<?= "../../assets/" . htmlspecialchars($produto['imagem']) ?>"
+                                        alt="<?= htmlspecialchars($produto['nome']) ?>"
+                                        class="w-full h-48 object-cover rounded-md">
+                                <?php else: ?>
+                                    <div class="w-full h-48 bg-gray-300 flex items-center justify-center rounded-md">
+                                        <span class="text-gray-600">No Image</span>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($produto['nome']) ?></h3>
+                                    <p class="text-sm text-gray-500 mt-2">
+                                        Preço Original: <span class="line-through text-gray-400"><?= number_format($produto['preco'], 2) ?>€</span>
+                                    </p>
+                                    <p class="text-lg text-green-600 font-semibold mt-2">
+                                        Preço com Desconto: <?= number_format($produto['preco_com_desconto'], 2) ?>€
+                                    </p>
                                 </div>
-                            <?php endif; ?>
-
-                            <h3 class="mt-2 text-lg font-bold"><?= $produto['nome'] ?></h3>
-                            <p class="text-gray-500">
-                                Preço Original: <span class="line-through"><?= number_format($produto['preco'], 2) ?>€</span>
-                            </p>
-                            <p class="text-green-600 font-semibold mt-1">
-                                Preço com Desconto: <?= number_format($produto['preco_com_desconto'], 2) ?>€
-                            </p>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p class="text-gray-500 mt-4">Nenhuma oferta disponível no momento.</p>
-                <?php endif; ?>
-            </div>
-
-            <!-- Botão para ver todas as promoções -->
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-gray-500 mt-4 text-center">Nenhuma oferta disponível no momento.</p>
+                    <?php endif; ?>
+                </div>
+                <!-- Botão para ver todas as promoções -->
                 <div class="text-center mt-4">
-                        <a href="/todasPromocoes" class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-red-700 focus:outline-none">
-                            Ver todas as promoções
-                        </a>
-                    </div>
-        </section>
+                    <a href="/todasPromocoes" class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-red-700 focus:outline-none">
+                        Ver todas as promoções
+                    </a>
+                </div>
+            </section>
     </main>
 
     <!-- Rodapé -->
