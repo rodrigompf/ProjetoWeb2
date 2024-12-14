@@ -20,25 +20,21 @@ class CartController
         $produtos = [];
         if (isset($_SESSION['cart'])) {
             foreach ($_SESSION['cart'] as $product_id => $item) {
-                // Obter os detalhes do produto, incluindo o desconto
+                // Fetch product details from the database
                 $produto = $model->getProdutoById($product_id);
 
                 if ($produto) {
                     $produto['quantity'] = $item['quantity'];
 
-                    // Recuperar o preço original e o desconto da base de dados
+                    // Use the discount stored in the session if available
+                    $descontoPercent = isset($item['discount']) ? (float)$item['discount'] : (isset($produto['desconto']) ? (float)$produto['desconto'] : 0);
+
+                    // Calculate the price with the correct discount
                     $precoOriginal = (float)$produto['preco'];
-                    $descontoPercent = isset($produto['desconto']) ? (float)$produto['desconto'] : 0;
+                    $discountPrice = $precoOriginal * (1 - ($descontoPercent / 100));
 
-                    // Calcular o preço com desconto
-                    if ($descontoPercent > 0) {
-                        $discountPrice = $precoOriginal * (1 - ($descontoPercent / 100));
-                    } else {
-                        $discountPrice = $precoOriginal;  // Se não houver desconto, manter o preço original
-                    }
-
-                    // Adicionar os dados do produto com o preço com desconto
-                    $produto['discount_price'] = round($discountPrice, 2); // Arredondado para 2 casas decimais
+                    // Add product details including discount price
+                    $produto['discount_price'] = round($discountPrice, 2); // Rounded to 2 decimal places
                     $produto['descontoPercent'] = $descontoPercent;
 
                     $produtos[] = $produto;
@@ -46,9 +42,10 @@ class CartController
             }
         }
 
-        // Passar a lista de produtos com descontos para a view
+        // Pass the list of products to the view
         require_once __DIR__ . '/../views/cartView.php';
     }
+
 
 
 
@@ -63,19 +60,26 @@ class CartController
         $produto = $model->getProdutoById((int)$product_id);
 
         if ($produto) {
-            // Add the product to the cart
+            // Ensure the cart session exists
             if (!isset($_SESSION['cart'])) {
                 $_SESSION['cart'] = [];
             }
 
+            // Retrieve product details
+            $originalPrice = (float)$produto['preco'];
+            $discountPercent = isset($produto['desconto']) ? (float)$produto['desconto'] : 0;
+            $priceWithDiscount = $originalPrice * (1 - ($discountPercent / 100));
+
+            // Add or update product in the cart
             if (isset($_SESSION['cart'][$product_id])) {
                 $_SESSION['cart'][$product_id]['quantity'] += 1;
             } else {
-                // Store the discount as well
                 $_SESSION['cart'][$product_id] = [
+                    'name' => $produto['nome'],
                     'quantity' => 1,
-                    'discount' => $produto['desconto'], // Store the discount for later use
-                    'price_with_discount' => $produto['preco'] * (1 - ($produto['desconto'] / 100)) // Calculate price with discount
+                    'original_price' => $originalPrice,
+                    'price_with_discount' => $priceWithDiscount,
+                    'discount' => $discountPercent
                 ];
             }
 

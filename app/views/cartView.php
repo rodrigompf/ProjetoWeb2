@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
-        // Function to remove 1 item from the cart
         async function remove1(productId) {
             try {
                 const response = await fetch(`/cart/remove/${productId}`, {
@@ -18,10 +17,10 @@
                     },
                     body: JSON.stringify({
                         quantity: 1
-                    }) // Remove 1 item
+                    })
                 });
                 if (response.ok) {
-                    location.reload(); // Reload the page after successful removal
+                    location.reload();
                 } else {
                     console.error('Failed to remove 1 item.');
                 }
@@ -30,7 +29,6 @@
             }
         }
 
-        // Function to remove all items of a product from the cart
         async function removeAll(productId) {
             try {
                 const response = await fetch(`/cart/remove/${productId}`, {
@@ -40,10 +38,10 @@
                     },
                     body: JSON.stringify({
                         quantity: 'all'
-                    }) // Remove all items
+                    })
                 });
                 if (response.ok) {
-                    location.reload(); // Reload the page after successful removal
+                    location.reload();
                 } else {
                     console.error('Failed to remove all items.');
                 }
@@ -75,39 +73,23 @@
 
                     <tbody>
                         <?php foreach ($_SESSION['cart'] as $product_id => $item): ?>
-                            <?php require_once __DIR__ . '/../models/ProdutosModel.php'; ?>
-                            <?php $model = new ProdutosModel(); ?>
-                            <?php $produto = $model->getProdutoById($product_id); ?>
-
-                            <?php
-                            // Dados do produto recuperados da base de dados
-                            $nome = htmlspecialchars($produto['nome']);
-                            $precoOriginal = (float)$produto['preco'];
-                            $descontoPercent = isset($produto['desconto']) ? (float)$produto['desconto'] : 0;
-                            $discountPrice = isset($produto['discount_price']) ? (float)$produto['discount_price'] : $precoOriginal;
-
-                            // Calculate discount price if discount percentage is available
-                            if ($descontoPercent > 0) {
-                                $precoComDesconto = $precoOriginal * (1 - ($descontoPercent / 100));
-                            } else {
-                                $precoComDesconto = $discountPrice;
-                            }
-                            ?>
-
                             <tr>
-                                <td class="border-t px-4 py-2 text-center"><?= $nome ?></td>
+                                <!-- Nome do Produto -->
+                                <td class="border-t px-4 py-2 text-center"><?= htmlspecialchars($item['name']) ?></td>
 
                                 <!-- Preço do Produto -->
                                 <td class="border-t px-4 py-2 text-center">
-                                    <?php if ($precoComDesconto < $precoOriginal): ?>
+                                    <?php if ($item['discount'] > 0): ?>
                                         <p class="text-sm text-gray-500 line-through">
-                                            €<?= number_format($precoOriginal, 2) ?>
+                                            €<?= number_format($item['original_price'], 2) ?>
                                         </p>
                                         <p class="text-lg text-green-600 font-semibold">
-                                            €<?= number_format($precoComDesconto, 2) ?>
+                                            €<?= number_format($item['price_with_discount'], 2) ?>
                                         </p>
                                     <?php else: ?>
-                                        <p class="text-lg text-green-600 font-semibold">€<?= number_format($precoOriginal, 2) ?></p>
+                                        <p class="text-lg text-green-600 font-semibold">
+                                            €<?= number_format($item['original_price'], 2) ?>
+                                        </p>
                                     <?php endif; ?>
                                 </td>
 
@@ -116,9 +98,9 @@
 
                                 <!-- Percentual de Desconto -->
                                 <td class="border-t px-4 py-2 text-center">
-                                    <?php if ($descontoPercent > 0): ?>
+                                    <?php if ($item['discount'] > 0): ?>
                                         <span class="bg-red-500 text-white rounded px-2 py-1 text-sm">
-                                            -<?= number_format($descontoPercent, 0) ?>%
+                                            -<?= number_format($item['discount'], 0) ?>%
                                         </span>
                                     <?php else: ?>
                                         <span>-</span>
