@@ -55,10 +55,20 @@ public function getProdutoById($product_id) {
     $produto = $query->fetch(PDO::FETCH_ASSOC);
 
     if ($produto) {
-        // Handle discount price fallback
-        if (!isset($produto['discount_price']) || $produto['discount_price'] === NULL) {
-            $produto['discount_price'] = $produto['preco'];
+        $precoOriginal = (float)$produto['preco'];
+        $descontoPercent = (float)$produto['discount_price'];
+
+        if ($descontoPercent > 0) {
+            $produto['desconto'] = round($precoOriginal * (1 - ($descontoPercent / 100)), 2);
+        } else {
+            $produto['desconto'] = $precoOriginal;
         }
+
+        // Debugging: Output retrieved values
+        error_log('Produto ID: ' . $product_id);
+        error_log('Preço Original: ' . $precoOriginal);
+        error_log('Desconto Percentual: ' . $descontoPercent);
+        error_log('Discount Price: ' . $produto['desconto']);
 
         return $produto;
     }
@@ -66,6 +76,9 @@ public function getProdutoById($product_id) {
     return false;
 }
 
+
+
+ 
 
 
 

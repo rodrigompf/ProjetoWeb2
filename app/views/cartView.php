@@ -8,6 +8,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
+        function calculateDiscountPercentage(originalPrice, priceWithDiscount) {
+            if (originalPrice > 0 && priceWithDiscount > 0) {
+                return 100 - ((priceWithDiscount / originalPrice) * 100);
+            }
+            return 0;
+        }
         async function remove1(productId) {
             try {
                 const response = await fetch(`/cart/remove/${productId}`, {
@@ -79,7 +85,7 @@
 
                                 <!-- Preço do Produto -->
                                 <td class="border-t px-4 py-2 text-center">
-                                    <?php if ($item['discount'] > 0): ?>
+                                    <?php if ($item['original_price'] > $item['price_with_discount']): ?>
                                         <p class="text-sm text-gray-500 line-through">
                                             €<?= number_format($item['original_price'], 2) ?>
                                         </p>
@@ -97,30 +103,39 @@
                                 <td class="border-t px-4 py-2 text-center"><?= $item['quantity'] ?></td>
 
                                 <!-- Percentual de Desconto -->
-                                <td class="border-t px-4 py-2 text-center">
-                                    <?php if ($item['discount'] > 0): ?>
-                                        <span class="bg-red-500 text-white rounded px-2 py-1 text-sm">
-                                            -<?= number_format($item['discount'], 0) ?>%
-                                        </span>
-                                    <?php else: ?>
-                                        <span>-</span>
-                                    <?php endif; ?>
-                                </td>
+                                <!-- Percentual de Desconto -->
+<!-- Percentual de Desconto -->
+<td class="border-t px-4 py-2 text-center">
+    <?php
+        $descontoPercentual = (float)$item['discount']; // Get discount directly from the database
 
-                                <!-- Botões de Ação -->
+        if ($descontoPercentual > 0) {
+    ?>
+        <span class="bg-red-500 text-white rounded px-2 py-1 text-sm">
+            -<?= number_format($descontoPercentual, 0) ?>%
+        </span>
+    <?php } else { ?>
+        <span>-</span>
+    <?php } ?>
+</td>
+
+
+
+
+                                <!-- Ações -->
                                 <td class="border-t px-4 py-2 text-center">
-                                    <button onclick="remove1(<?= $product_id ?>)"
-                                        class="bg-yellow-500 text-white rounded-lg py-2 px-4 hover:bg-yellow-600 transition">
+                                    <button onclick="remove1(<?= $product_id ?>)" class="bg-yellow-500 text-white rounded-lg py-2 px-4 hover:bg-yellow-600">
                                         Remover 1
                                     </button>
-                                    <button onclick="removeAll(<?= $product_id ?>)"
-                                        class="bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600 transition">
+                                    <button onclick="removeAll(<?= $product_id ?>)" class="bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600">
                                         Remover Tudo
                                     </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
+
                     </tbody>
+
                 </table>
             </div>
         <?php else: ?>

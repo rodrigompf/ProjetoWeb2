@@ -12,77 +12,77 @@ class CartController
     }
 
     // Display Cart Contents
-    public function index()
-    {
-        require_once __DIR__ . '/../models/ProdutosModel.php';
-        $model = new ProdutosModel();
+    public function index() {
+    require_once __DIR__ . '/../models/ProdutosModel.php';
+    $model = new ProdutosModel();
 
-        $produtos = [];
-        if (isset($_SESSION['cart'])) {
-            foreach ($_SESSION['cart'] as $product_id => $item) {
-                // Fetch product details from the database
-                $produto = $model->getProdutoById($product_id);
+    $produtos = [];
+    if (isset($_SESSION['cart'])) {
+        foreach ($_SESSION['cart'] as $product_id => $item) {
+            $produto = $model->getProdutoById($product_id);
 
-                if ($produto) {
-                    $produto['quantity'] = $item['quantity'];
+            if ($produto) {
+                $produto['quantity'] = $item['quantity'];
 
-                    // Use the discount stored in the session if available
-                    $descontoPercent = isset($item['discount']) ? (float)$item['discount'] : (isset($produto['desconto']) ? (float)$produto['desconto'] : 0);
+                // Use the discount stored in the session if available
+                $descontoPercent = isset($item['discount']) ? (float)$item['discount'] : (float)$produto['desconto'];
 
-                    // Calculate the price with the correct discount
-                    $precoOriginal = (float)$produto['preco'];
-                    $discountPrice = $precoOriginal * (1 - ($descontoPercent / 100));
+                // Debug: Check discount percentage
+                error_log('Discount Percentage: ' . $descontoPercent);
 
-                    // Add product details including discount price
-                    $produto['discount_price'] = round($discountPrice, 2); // Rounded to 2 decimal places
-                    $produto['descontoPercent'] = $descontoPercent;
+                $precoOriginal = (float)$produto['preco'];
 
-                    $produtos[] = $produto;
-                }
+                // Calculate the discounted price
+                $discountPrice = $precoOriginal * (1 - ($descontoPercent / 100));
+
+                // Debug the calculated discounted price
+                error_log('Calculated Discounted Price: ' . $discountPrice);
+
+                $produto['discount_price'] = round($discountPrice, 2);
+
+                $produtos[] = $produto;
             }
         }
-
-        // Pass the list of products to the view
-        require_once __DIR__ . '/../views/cartView.php';
     }
+
+    require_once __DIR__ . '/../views/cartView.php';
+}
+
+
+
 
 
 
 
 
     // Add product to the cart
-    public function add($product_id)
-    {
+    public function add($product_id) {
         require_once __DIR__ . '/../models/ProdutosModel.php';
         $model = new ProdutosModel();
-
-        // Fetch the product including its discount from the database
+    
         $produto = $model->getProdutoById((int)$product_id);
-
+    
         if ($produto) {
-            // Ensure the cart session exists
+            error_log('Produto adicionado ao carrinho: ' . $product_id);
+            error_log('Desconto ativo: ' . $produto['desconto']);
+            error_log('Discount Price: ' . $produto['discount_price']);
+    
             if (!isset($_SESSION['cart'])) {
                 $_SESSION['cart'] = [];
             }
-
-            // Retrieve product details
-            $originalPrice = (float)$produto['preco'];
-            $discountPercent = isset($produto['desconto']) ? (float)$produto['desconto'] : 0;
-            $priceWithDiscount = $originalPrice * (1 - ($discountPercent / 100));
-
-            // Add or update product in the cart
+    
             if (isset($_SESSION['cart'][$product_id])) {
                 $_SESSION['cart'][$product_id]['quantity'] += 1;
             } else {
                 $_SESSION['cart'][$product_id] = [
                     'name' => $produto['nome'],
                     'quantity' => 1,
-                    'original_price' => $originalPrice,
-                    'price_with_discount' => $priceWithDiscount,
-                    'discount' => $discountPercent
+                    'original_price' => (float)$produto['preco'],
+                    'price_with_discount' => (float)$produto['desconto'],
+                    'discount' => (float)$produto['discount_price'] // Ensure proper casting
                 ];
             }
-
+    
             echo "Produto adicionado ao carrinho";
             exit();
         } else {
@@ -90,7 +90,9 @@ class CartController
             exit();
         }
     }
-
+    
+    
+    
 
     // Remove product from the cart (1 or all)
     public function remove($product_id)
