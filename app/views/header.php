@@ -1,7 +1,4 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 ?>
 
 <header class="bg-green-600 text-white p-4">
