@@ -14,6 +14,7 @@
             }
             return 0;
         }
+
         async function remove1(productId) {
             try {
                 const response = await fetch(`/cart/remove/${productId}`, {
@@ -60,7 +61,6 @@
 
 <body class="bg-gray-100">
     <?php include './app/views/header.php'; ?>
-
     <div class="container mx-auto py-10">
         <h1 class="text-3xl font-bold mb-6 text-center">Seu Carrinho</h1>
 
@@ -77,16 +77,24 @@
                             <th class="px-4 py-2 text-center">Ações</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <?php foreach ($_SESSION['cart'] as $product_id => $item): ?>
                             <tr>
                                 <!-- Imagem do Produto -->
                                 <td class="border-t px-4 py-2 text-center">
-                                    <img
-                                        src="/assets/<?php echo htmlspecialchars($produto['imagem']); ?>"
-                                        alt="<?php echo htmlspecialchars($produto['nome']); ?>"
-                                        class="w-full h-48 object-cover">
+                                    <?php
+                                    if (isset($item['imagem']) && !empty($item['imagem']) && isset($item['categoria']) && !empty($item['categoria'])) {
+                                        $imagePath = $_SERVER['DOCUMENT_ROOT'] . '/assets/' . htmlspecialchars($item['categoria']) . '/' . htmlspecialchars($item['imagem']);
+
+                                        if (file_exists($imagePath)) {
+                                            echo '<img src="/assets/' . htmlspecialchars($item['categoria']) . '/' . htmlspecialchars($item['imagem']) . '" alt="' . htmlspecialchars($item['nome']) . '" class="w-full h-48 object-cover">';
+                                        } else {
+                                            echo '<img src="/assets/default.jpg" alt="Imagem não disponível" class="w-full h-48 object-cover">';
+                                        }
+                                    } else {
+                                        echo '<img src="/assets/default.jpg" alt="Imagem não disponível" class="w-full h-48 object-cover">';
+                                    }
+                                    ?>
                                 </td>
 
                                 <!-- Nome do Produto -->
@@ -134,7 +142,6 @@
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-
                 </table>
             </div>
         <?php else: ?>
