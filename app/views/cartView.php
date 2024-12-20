@@ -69,6 +69,7 @@
                 <table class="w-3/4 bg-white rounded-lg shadow-lg overflow-hidden">
                     <thead>
                         <tr class="bg-gray-200">
+                            <th class="px-4 py-2 text-center">Imagem</th>
                             <th class="px-4 py-2 text-center">Nome</th>
                             <th class="px-4 py-2 text-center">Preço</th>
                             <th class="px-4 py-2 text-center">Quantidade</th>
@@ -80,6 +81,14 @@
                     <tbody>
                         <?php foreach ($_SESSION['cart'] as $product_id => $item): ?>
                             <tr>
+                                <!-- Imagem do Produto -->
+                                <td class="border-t px-4 py-2 text-center">
+                                    <img
+                                        src="/assets/<?php echo htmlspecialchars($produto['imagem']); ?>"
+                                        alt="<?php echo htmlspecialchars($produto['nome']); ?>"
+                                        class="w-full h-48 object-cover">
+                                </td>
+
                                 <!-- Nome do Produto -->
                                 <td class="border-t px-4 py-2 text-center"><?= htmlspecialchars($item['name']) ?></td>
 
@@ -103,24 +112,15 @@
                                 <td class="border-t px-4 py-2 text-center"><?= $item['quantity'] ?></td>
 
                                 <!-- Percentual de Desconto -->
-                                <!-- Percentual de Desconto -->
-<!-- Percentual de Desconto -->
-<td class="border-t px-4 py-2 text-center">
-    <?php
-        $descontoPercentual = (float)$item['discount']; // Get discount directly from the database
-
-        if ($descontoPercentual > 0) {
-    ?>
-        <span class="bg-red-500 text-white rounded px-2 py-1 text-sm">
-            -<?= number_format($descontoPercentual, 0) ?>%
-        </span>
-    <?php } else { ?>
-        <span>-</span>
-    <?php } ?>
-</td>
-
-
-
+                                <td class="border-t px-4 py-2 text-center">
+                                    <?php if ($item['discount'] > 0): ?>
+                                        <span class="bg-red-500 text-white rounded px-2 py-1 text-sm">
+                                            -<?= number_format($item['discount'], 0) ?>%
+                                        </span>
+                                    <?php else: ?>
+                                        <span>-</span>
+                                    <?php endif; ?>
+                                </td>
 
                                 <!-- Ações -->
                                 <td class="border-t px-4 py-2 text-center">
@@ -133,7 +133,6 @@
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-
                     </tbody>
 
                 </table>
