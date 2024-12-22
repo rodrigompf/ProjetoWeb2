@@ -82,20 +82,15 @@
                             <tr>
                                 <!-- Imagem do Produto -->
                                 <td class="border-t px-4 py-2 text-center">
-                                    <?php
-                                    if (isset($item['imagem']) && !empty($item['imagem']) && isset($item['categoria']) && !empty($item['categoria'])) {
-                                        $imagePath = $_SERVER['DOCUMENT_ROOT'] . '/assets/' . htmlspecialchars($item['categoria']) . '/' . htmlspecialchars($item['imagem']);
+    <?php
+    if (!empty($item['imagem'])) {
+        echo '<img src="/assets/' . htmlspecialchars($item['imagem']) . '" alt="' . htmlspecialchars($item['name']) . '" class="w-24 h-24 object-cover">';
+    } else {
+        echo '<img src="/assets/default.jpg" alt="Imagem não disponível" class="w-24 h-24 object-cover">';
+    }
+    ?>
+</td>
 
-                                        if (file_exists($imagePath)) {
-                                            echo '<img src="/assets/' . htmlspecialchars($item['categoria']) . '/' . htmlspecialchars($item['imagem']) . '" alt="' . htmlspecialchars($item['nome']) . '" class="w-full h-48 object-cover">';
-                                        } else {
-                                            echo '<img src="/assets/default.jpg" alt="Imagem não disponível" class="w-full h-48 object-cover">';
-                                        }
-                                    } else {
-                                        echo '<img src="/assets/default.jpg" alt="Imagem não disponível" class="w-full h-48 object-cover">';
-                                    }
-                                    ?>
-                                </td>
 
                                 <!-- Nome do Produto -->
                                 <td class="border-t px-4 py-2 text-center"><?= htmlspecialchars($item['name']) ?></td>

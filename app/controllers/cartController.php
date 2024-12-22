@@ -63,10 +63,6 @@ class CartController
         $produto = $model->getProdutoById((int)$product_id);
     
         if ($produto) {
-            error_log('Produto adicionado ao carrinho: ' . $product_id);
-            error_log('Desconto ativo: ' . $produto['desconto']);
-            error_log('Discount Price: ' . $produto['discount_price']);
-    
             if (!isset($_SESSION['cart'])) {
                 $_SESSION['cart'] = [];
             }
@@ -76,10 +72,11 @@ class CartController
             } else {
                 $_SESSION['cart'][$product_id] = [
                     'name' => $produto['nome'],
+                    'imagem' => $produto['imagem'], // Store the image
                     'quantity' => 1,
                     'original_price' => (float)$produto['preco'],
-                    'price_with_discount' => (float)$produto['desconto'],
-                    'discount' => (float)$produto['discount_price'] // Ensure proper casting
+                    'price_with_discount' => $produto['precoDescontado'],
+                    'discount' => $produto['discount_price'],
                 ];
             }
     
@@ -90,6 +87,7 @@ class CartController
             exit();
         }
     }
+    
     
     
     
