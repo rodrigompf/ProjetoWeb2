@@ -17,6 +17,19 @@ return [
         'controller' => 'adminController',
         'action' => 'index',
     ],
+    'categorias' => [
+        'controller' => 'CategoriasController',
+        'action' => 'index',
+    ],
+    'categorias/create' => [
+        'controller' => 'CategoriasController',
+        'action' => 'create',
+    ],
+    'categorias/delete/{id}' => [
+        'controller' => 'CategoriasController',
+        'action' => 'delete',
+    ],
+
     'produtos/store' => [
         'controller' => 'produtosController',
         'action' => 'store'

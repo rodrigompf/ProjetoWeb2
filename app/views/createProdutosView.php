@@ -10,7 +10,10 @@
     <div class="container mx-auto py-10">
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Adicionar Novo Produto</h1>
 
-        <!-- Feedback Messages -->
+        <a href="javascript:history.back()" 
+        class="absolute top-8 left-8 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">
+            Back
+        </a>
         <?php if (!empty($error)): ?>
             <div class="bg-red-100 text-red-700 p-4 rounded mb-6">
                 <?= htmlspecialchars($error) ?>

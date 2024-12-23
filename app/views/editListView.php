@@ -8,6 +8,11 @@
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto py-10">
+    <a href="javascript:history.back()" 
+       class="absolute top-8 left-8 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">
+        Back
+    </a>
+        
         <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Produtos</h1>
 
         <form method="GET" class="mb-6">
