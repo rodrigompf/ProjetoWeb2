@@ -11,7 +11,7 @@ return [
     ],
     'produtos/create' => [
         'controller' => 'AdminController',
-        'action' => 'create'  
+        'action' => 'create'
     ],
     'adminZone' => [
         'controller' => 'adminController',
@@ -29,7 +29,6 @@ return [
         'controller' => 'CategoriasController',
         'action' => 'delete',
     ],
-
     'produtos/store' => [
         'controller' => 'produtosController',
         'action' => 'store'
@@ -71,8 +70,8 @@ return [
         'action' => 'index'
     ],
     'cart' => [
-    'controller' => 'CartController',
-    'action' => 'index'
+        'controller' => 'CartController',
+        'action' => 'index'
     ],
     'cart/add/{id}' => [
         'controller' => 'CartController',
@@ -82,5 +81,12 @@ return [
         'controller' => 'CartController',
         'action' => 'remove'
     ],
-]
-?>
+    'cart/buy' => [
+        'controller' => 'CartController',
+        'action' => 'buy'
+    ],
+    'cart/history' => [
+        'controller' => 'CartController',
+        'action' => 'history'
+    ],
+];

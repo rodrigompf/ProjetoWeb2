@@ -52,6 +52,13 @@
                     <option value="1">Peixe</option>
                     <option value="2">Carne</option>
                     <option value="3">Frutas</option>
+                    <option value="4">Sumos</option>
+                    <option value="5">Eletrodomesticos</option>
+                    <option value="6">Brinquedos</option>
+                    <option value="7">Doces</option>
+                    <option value="8">Higiene</option>
+                    <option value="9">Congelados</option>
+                    <option value="10">Pastelaria</option>
                 </select>
             </div>
             <!-- Desconto -->

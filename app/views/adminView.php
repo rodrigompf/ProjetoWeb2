@@ -26,7 +26,7 @@
 
         <a href="/categorias" 
            class="px-4 py-2 bg-purple-500 text-white font-semibold rounded shadow hover:bg-purple-600 transition">
-            Categorias
+            Adicionar/eliminar Categorias
         </a>
     </div>
 

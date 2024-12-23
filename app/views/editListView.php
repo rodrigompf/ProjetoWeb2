@@ -47,7 +47,7 @@
                         </a>
                         <a href="/produtos/delete/<?= $produto['id'] ?>" 
                         class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600 transition"
-                        onclick="return confirm('Tem certeza que deseja eliminar este produto?')">
+                        onclick="return confirm('Tem a certeza que deseja eliminar este produto?')">
                             Eliminar
                         </a>
                     </td>
