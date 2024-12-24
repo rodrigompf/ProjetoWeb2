@@ -65,28 +65,36 @@
                 console.error('Erro:', error);
             }
         }
+
+        /**
+         * Função para finalizar a compra
+         */
         async function finalizarCompra() {
-            try {
-                const response = await fetch(`/cart/buy`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    alert("Compra finalizada com sucesso!");
-                    window.location.href = '/'; // Redireciona para a página principal
-                } else {
-                    alert(data.message); // Exibe a mensagem de erro
-                }
-            } catch (error) {
-                console.error('Erro inesperado:', error);
-                alert("Ocorreu um erro ao finalizar a compra.");
+    try {
+        // Send purchase request to the server
+        const response = await fetch('/cart/buy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             }
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'error') {
+            // Show the error message returned from PHP
+            alert(data.message); // This will show the specific out-of-stock error or other issues
+        } else if (data.status === 'success') {
+            alert(data.message);  // Success message
+            window.location.href = '/';  // Redirect to the homepage or another page
         }
+    } catch (error) {
+        console.error('Erro inesperado:', error);
+        alert("Ocorreu um erro ao finalizar a compra.");
+    }
+}
+
+
     </script>
 </head>
 

@@ -28,6 +28,11 @@
            class="px-4 py-2 bg-purple-500 text-white font-semibold rounded shadow hover:bg-purple-600 transition">
             Adicionar/eliminar Categorias
         </a>
+
+        <a href="/stock-management" 
+        class="px-4 py-2 bg-orange-500 text-white font-semibold rounded shadow hover:bg-orange-600 transition">
+            Stock Management
+        </a>
     </div>
 
 </body>

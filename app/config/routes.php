@@ -13,6 +13,14 @@ return [
         'controller' => 'AdminController',
         'action' => 'create'
     ],
+    'stock-management' => [
+    'controller' => 'StockManagementController',
+    'action' => 'index'
+    ],
+    'stock-management/add' => [
+    'controller' => 'StockManagementController',
+    'action' => 'addStock'
+    ],
     'adminZone' => [
         'controller' => 'adminController',
         'action' => 'index',

@@ -11,127 +11,132 @@ class AdminController
     }
 
     public function create()
-    {
-        $error = null;
-        $success = null;
+{
+    $error = null;
+    $success = null;
 
-        try {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $conn = Connection::getInstance();
+    try {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $conn = Connection::getInstance();
 
-                // Capture form inputs
-                $nome = $_POST['nome'] ?? null;
-                $descricao = $_POST['descricao'] ?? null;
-                $preco = $_POST['preco'] ?? null;
-                $discount_price = $_POST['discount_price'] ?? null;
-                $categoria_id = $_POST['categoria_id'] ?? null;
-                $desconto = $_POST['desconto'] ?? null;
+            // Capture form inputs
+            $nome = $_POST['nome'] ?? null;
+            $descricao = $_POST['descricao'] ?? null;
+            $preco = $_POST['preco'] ?? null;
+            $discount_price = $_POST['discount_price'] ?? null;
+            $categoria_id = $_POST['categoria_id'] ?? null;
+            $desconto = $_POST['desconto'] ?? null;
 
-                // Validate required fields
-                if (!$nome || !$preco || !$categoria_id) {
-                    $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
-                } else {
-                    $targetFile = null;
+            // Validate required fields
+            if (!$nome || !$preco || !$categoria_id) {
+                $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
+            } else {
+                $targetFile = null;
 
-                    // Handle file upload if provided
-                    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-                        // Recuperar as categorias do banco de dados
-                        $sql = "SELECT id, nome FROM categorias";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->execute();
-                        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // Handle file upload if provided
+                if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+                    // Recuperar as categorias do banco de dados
+                    $sql = "SELECT id, nome FROM categorias";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->execute();
+                    $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        // Procurar a categoria no banco de dados pelo ID
-                        $categoriaNome = null;
-                        foreach ($categorias as $categoria) {
-                            if ($categoria['id'] == $categoria_id) {
-                                $categoriaNome = $categoria['nome'];
-                                break;
-                            }
-                        }
-
-                        if ($categoriaNome) {
-                            // Define o diretório de upload com base no nome da categoria
-                            $uploadDir = strtolower($categoriaNome) . '/';
-
-                            // Verifica se o diretório de upload existe, se não, cria
-                            if (!is_dir($uploadDir)) {
-                                mkdir($uploadDir, 0777, true);
-                            }
-
-                            // Caminho para o arquivo de imagem
-                            $targetFile = $uploadDir . basename($_FILES['imagem']['name']);
-
-                            // Move o arquivo de imagem para o diretório de destino
-                            if (!move_uploaded_file($_FILES['imagem']['tmp_name'], $targetFile)) {
-                                $error = "Erro ao fazer upload da imagem.";
-                            }
-                        } else {
-                            $error = "Categoria inválida.";
+                    // Procurar a categoria no banco de dados pelo ID
+                    $categoriaNome = null;
+                    foreach ($categorias as $categoria) {
+                        if ($categoria['id'] == $categoria_id) {
+                            $categoriaNome = $categoria['nome'];
+                            break;
                         }
                     }
 
+                    if ($categoriaNome) {
+                        // Define o diretório de upload com base no nome da categoria
+                        $uploadDir = strtolower($categoriaNome) . '/';
 
-                    // If no errors, find the next available ID
-                    if (!$error) {
-                        // Query to find the next available ID
-                        $sql = "SELECT MIN(t1.id + 1) AS next_id 
-                            FROM produtos t1 
-                            WHERE NOT EXISTS (SELECT t2.id FROM produtos t2 WHERE t2.id = t1.id + 1)";
-                        $stmt = $conn->query($sql);
-                        $nextId = $stmt->fetchColumn();
-
-                        // Fallback: if the table is empty, use 1
-                        $nextId = $nextId ?: 1;
-
-                        // Insert product data into the database
-                        $sql = "INSERT INTO produtos (id, nome, descricao, preco, discount_price, categoria_id, imagem, desconto) 
-                            VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto)";
-
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(':id', $nextId);
-                        $stmt->bindParam(':nome', $nome);
-                        $stmt->bindParam(':descricao', $descricao);
-                        $stmt->bindParam(':preco', $preco);
-                        $stmt->bindParam(':discount_price', $discount_price);
-                        $stmt->bindParam(':categoria_id', $categoria_id);
-                        $stmt->bindParam(':imagem', $targetFile);
-                        $stmt->bindParam(':desconto', $desconto);
-
-                        if ($stmt->execute()) {
-                            $success = "Produto adicionado com sucesso!";
-                        } else {
-                            $error = "Erro ao adicionar produto.";
+                        // Verifica se o diretório de upload existe, se não, cria
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
                         }
+
+                        // Caminho para o arquivo de imagem
+                        $targetFile = $uploadDir . basename($_FILES['imagem']['name']);
+
+                        // Move o arquivo de imagem para o diretório de destino
+                        if (!move_uploaded_file($_FILES['imagem']['tmp_name'], $targetFile)) {
+                            $error = "Erro ao fazer upload da imagem.";
+                        }
+                    } else {
+                        $error = "Categoria inválida.";
+                    }
+                }
+
+                // If no errors, find the next available ID
+                if (!$error) {
+                    // Query to find the next available ID
+                    $sql = "SELECT MIN(t1.id + 1) AS next_id 
+                        FROM produtos t1 
+                        WHERE NOT EXISTS (SELECT t2.id FROM produtos t2 WHERE t2.id = t1.id + 1)";
+                    $stmt = $conn->query($sql);
+                    $nextId = $stmt->fetchColumn();
+
+                    // Fallback: if the table is empty, use 1
+                    $nextId = $nextId ?: 1;
+
+                    // Insert product data into the database, including the stock value set to 0
+                    $sql = "INSERT INTO produtos (id, nome, descricao, preco, discount_price, categoria_id, imagem, desconto, stock) 
+                        VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto, :stock)";
+
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindParam(':id', $nextId);
+                    $stmt->bindParam(':nome', $nome);
+                    $stmt->bindParam(':descricao', $descricao);
+                    $stmt->bindParam(':preco', $preco);
+                    $stmt->bindParam(':discount_price', $discount_price);
+                    $stmt->bindParam(':categoria_id', $categoria_id);
+                    $stmt->bindParam(':imagem', $targetFile);
+                    $stmt->bindParam(':desconto', $desconto);
+
+                    // Set stock to 0
+                    $stock = 0;
+                    $stmt->bindParam(':stock', $stock);
+
+                    if ($stmt->execute()) {
+                        $success = "Produto adicionado com sucesso!";
+                    } else {
+                        $error = "Erro ao adicionar produto.";
                     }
                 }
             }
-        } catch (PDOException $e) {
-            $error = "Erro no banco de dados: " . $e->getMessage();
         }
-
-        // Include the view with feedback
-        require_once './app/views/createProdutosView.php';
+    } catch (PDOException $e) {
+        $error = "Erro no banco de dados: " . $e->getMessage();
     }
+
+    // Include the view with feedback
+    require_once './app/views/createProdutosView.php';
+}
+
 
     public function editList()
-    {
-        try {
-            $conn = Connection::getInstance();
-            $search = $_GET['search'] ?? '';
+{
+    try {
+        $conn = Connection::getInstance();
+        $search = $_GET['search'] ?? '';
 
-            $sql = "SELECT * FROM produtos WHERE nome LIKE :search";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindValue(':search', "%$search%");
-            $stmt->execute();
-            $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $produtos = [];
-            $error = "Erro no banco de dados: " . $e->getMessage();
-        }
-
-        require_once './app/views/editListView.php';
+        $sql = "SELECT id, nome, preco, stock FROM produtos WHERE nome LIKE :search";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':search', "%$search%");
+        $stmt->execute();
+        $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $produtos = [];
+        $error = "Erro no banco de dados: " . $e->getMessage();
     }
+
+    require_once './app/views/editListView.php';
+}
+
 
     public function editForm($id)
     {
