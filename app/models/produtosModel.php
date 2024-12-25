@@ -59,11 +59,10 @@ public function getProdutoById($product_id) {
         $descontoPercent = (float)$produto['discount_price'];
 
         if ($descontoPercent > 0) {
-            $produto['desconto'] = round($precoOriginal * (1 - ($descontoPercent / 100)), 2);
+            $produto['desconto'] = round($precoOriginal * (1 - ($descontoPercent/100 )), 2);
         } else {
             $produto['desconto'] = $precoOriginal;
         }
-
         // Debugging: Output retrieved values
         error_log('Produto ID: ' . $product_id);
         error_log('Preço Original: ' . $precoOriginal);

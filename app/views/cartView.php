@@ -9,16 +9,6 @@
 
     <script>
         /**
-         * Função para calcular desconto
-         */
-        function calculateDiscountPercentage(originalPrice, priceWithDiscount) {
-            if (originalPrice > 0 && priceWithDiscount > 0) {
-                return 100 - ((priceWithDiscount / originalPrice) * 100);
-            }
-            return 0;
-        }
-
-        /**
          * Função para remover 1 item
          */
         async function remove1(productId) {

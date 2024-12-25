@@ -64,7 +64,7 @@ class CartController
                     'imagem' => $produto['imagem'], // Armazenar a imagem
                     'quantity' => 1,
                     'original_price' => (float)$produto['preco'],
-                    'price_with_discount' => $produto['precoDescontado'],
+                    'price_with_discount' => $produto['desconto'],
                     'discount' => $produto['discount_price'],
                 ];
             }
