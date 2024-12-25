@@ -279,7 +279,7 @@ class CartController
 
             require_once __DIR__ . '/../views/historyView.php';  // Exibir a página do histórico
         } catch (Exception $e) {
-            echo "Erro ao carregar o histórico: " . $
+            echo "Erro ao carregar o histórico: " . $purchaseId;
 
         }
     }
