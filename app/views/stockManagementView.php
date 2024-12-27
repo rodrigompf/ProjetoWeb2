@@ -27,10 +27,10 @@
     </a>
 
     <div class="w-full max-w-4xl bg-white shadow-md rounded p-6">
-        <h1 class="text-2xl font-bold mb-6">Stock Management</h1>
+        <h1 class="text-2xl font-bold mb-6">Gestão de stock</h1>
 
         <form method="GET" action="/stock-management">
-            <label for="categoria_id" class="block text-lg font-semibold mb-2">Select Category:</label>
+            <label for="categoria_id" class="block text-lg font-semibold mb-2">Selecionar Categoria:</label>
             <select name="categoria_id" id="categoria_id" class="block w-full p-3 border rounded mb-6">
                 <option value="">-- Select a Category --</option>
                 <?php foreach ($categorias as $categoria): ?>
@@ -41,12 +41,12 @@
                 <?php endforeach; ?>
             </select>
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition">
-                View Products
+                Ver Products
             </button>
         </form>
 
         <?php if (!empty($produtos)): ?>
-            <h2 class="text-xl font-semibold mt-8 mb-4">Products:</h2>
+            <h2 class="text-xl font-semibold mt-8 mb-4">Produtos:</h2>
             <table class="w-full border-collapse border border-gray-200">
                 <thead>
                     <tr class="bg-gray-100">
@@ -75,7 +75,7 @@
                 </tbody>
             </table>
         <?php elseif (isset($_GET['categoria_id'])): ?>
-            <p class="mt-6 text-red-500">No products found for the selected category.</p>
+            <p class="mt-6 text-red-500">Nenhum produto encontrado para a categoria selecionada.</p>
         <?php endif; ?>
     </div>
 
@@ -86,7 +86,7 @@
             <p>Current Stock: <span id="currentStockValue" class="font-bold"></span></p>
             <form method="POST" action="/stock-management/add">
                 <input type="hidden" name="product_id" id="productIdInput">
-                <label for="newStock" class="block text-lg font-semibold mt-4">New Stock Amount:</label>
+                <label for="newStock" class="block text-lg font-semibold mt-4">Nova quantia de stock:</label>
                 <input type="number" name="new_stock" id="newStock" class="block w-full p-3 border rounded mb-6" required>
                 <div class="flex justify-between">
                     <button type="button" onclick="hideModal()" 
@@ -95,7 +95,7 @@
                     </button>
                     <button type="submit" 
                             class="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition">
-                        Confirm
+                        Confirmar
                     </button>
                 </div>
             </form>

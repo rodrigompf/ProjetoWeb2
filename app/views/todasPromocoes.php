@@ -51,7 +51,7 @@ if (!isset($produtosComDesconto)) {
                     <?php foreach ($produtosComDesconto as $produto): ?>
                         <div class="product bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition-all duration-200">
                             <?php if (!empty($produto['imagem'])): ?>
-                                <img src="<?= "../../assets/" . htmlspecialchars($produto['imagem']) ?>" 
+                                <img src="<?php echo htmlspecialchars($produto['imagem']); ?>" 
                                      alt="<?= htmlspecialchars($produto['nome']) ?>" 
                                      class="w-full h-48 object-cover rounded-md">
                             <?php else: ?>

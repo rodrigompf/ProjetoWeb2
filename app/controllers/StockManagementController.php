@@ -55,12 +55,12 @@ class StockManagementController
                 $stmt->bindParam(':product_id', $productId);
 
                 if ($stmt->execute()) {
-                    $success = "Stock updated successfully!";
+                    $success = "Stock atualizado com sucesso!";
                 } else {
-                    $error = "Failed to update stock.";
+                    $error = "Falha ao atualizar o stock.";
                 }
             } else {
-                $error = "Invalid input.";
+                $error = "Número inválido.";
             }
         }
     } catch (PDOException $e) {

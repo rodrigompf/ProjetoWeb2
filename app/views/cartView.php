@@ -60,38 +60,36 @@
          * Função para finalizar a compra
          */
         async function finalizarCompra() {
-    try {
-        // Send purchase request to the server
-        const response = await fetch('/cart/buy', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+            try {
+                // Send purchase request to the server
+                const response = await fetch('/cart/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'error') {
+                    // Show the error message returned from PHP
+                    alert(data.message); // This will show the specific out-of-stock error or other issues
+                } else if (data.status === 'success') {
+                    alert(data.message);  // Success message
+                    window.location.href = '/';  // Redirect to the homepage or another page
+                }
+            } catch (error) {
+                console.error('Erro inesperado:', error);
+                alert("Ocorreu um erro ao finalizar a compra.");
             }
-        });
-
-        const data = await response.json();
-
-        if (data.status === 'error') {
-            // Show the error message returned from PHP
-            alert(data.message); // This will show the specific out-of-stock error or other issues
-        } else if (data.status === 'success') {
-            alert(data.message);  // Success message
-            window.location.href = '/';  // Redirect to the homepage or another page
         }
-    } catch (error) {
-        console.error('Erro inesperado:', error);
-        alert("Ocorreu um erro ao finalizar a compra.");
-    }
-}
-
-
     </script>
 </head>
 
 <body class="bg-gray-100">
     <?php include './app/views/header.php'; ?>
     <div class="container mx-auto py-10">
-        <h1 class="text-3xl font-bold mb-6 text-center">Seu Carrinho</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center">O Seu Carrinho</h1>
 
         <?php if (!empty($_SESSION['cart'])): ?>
             <div class="flex justify-center">
@@ -103,16 +101,24 @@
                             <th class="px-4 py-2 text-center">Preço</th>
                             <th class="px-4 py-2 text-center">Quantidade</th>
                             <th class="px-4 py-2 text-center">Desconto (%)</th>
+                            <th class="px-4 py-2 text-center">Total</th>
                             <th class="px-4 py-2 text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($_SESSION['cart'] as $product_id => $item): ?>
+                        <?php 
+                            $totalCarrinho = 0; // Variável para somar o total do carrinho
+                            foreach ($_SESSION['cart'] as $product_id => $item): 
+                                $precoComDesconto = $item['price_with_discount'];
+                                $quantidade = $item['quantity'];
+                                $totalItem = $precoComDesconto * $quantidade; // Calcular o total do item
+                                $totalCarrinho += $totalItem; // Adicionar ao total do carrinho
+                        ?>
                             <tr>
                                 <!-- Imagem do Produto -->
                                 <td class="border-t px-4 py-2 text-center">
                                     <?php if (!empty($item['imagem'])): ?>
-                                        <img src="/assets/<?= htmlspecialchars($item['imagem']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="w-24 h-24 object-cover">
+                                        <img src="<?php echo htmlspecialchars($item['imagem']); ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="w-24 h-24 object-cover">
                                     <?php else: ?>
                                         <img src="/assets/default.jpg" alt="Imagem não disponível" class="w-24 h-24 object-cover">
                                     <?php endif; ?>
@@ -143,6 +149,11 @@
                                     <?php endif; ?>
                                 </td>
 
+                                <!-- Total do Item -->
+                                <td class="border-t px-4 py-2 text-center">
+                                    <p class="text-lg font-semibold">€<?= number_format($totalItem, 2) ?></p>
+                                </td>
+
                                 <!-- Ações -->
                                 <td class="border-t px-4 py-2 text-center">
                                     <button onclick="remove1(<?= $product_id ?>)" class="bg-yellow-500 text-white rounded-lg py-2 px-4 hover:bg-yellow-600">Remover 1</button>
@@ -152,6 +163,11 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Total do Carrinho -->
+            <div class="flex justify-end mt-6 text-lg font-bold">
+                <p class="mr-10">Total do Carrinho: €<?= number_format($totalCarrinho, 2) ?></p>
             </div>
 
             <!-- Botão para Finalizar Compra -->

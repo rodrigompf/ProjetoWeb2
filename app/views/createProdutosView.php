@@ -88,10 +88,10 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </select>
             </div>
 
-            <!-- Imagem -->
+            <!-- Imagem - Novo Campo para URL -->
             <div class="mb-4">
-                <label for="imagem" class="block text-gray-700 font-semibold mb-2">Imagem</label>
-                <input type="file" name="imagem" id="imagem" class="w-full rounded border">
+                <label for="imagem_url" class="block text-gray-700 font-semibold mb-2">URL da Imagem</label>
+                <input type="url" name="imagem_url" id="imagem_url" class="w-full px-4 py-2 rounded border" placeholder="Cole o URL da imagem aqui">
             </div>
 
             <!-- Botão de Submissão -->

@@ -203,7 +203,7 @@ class CartController
                     if ($produto) {
 
                         if ($item['quantity'] > $produto['stock']) {
-                            $insufficientStockItems[] = $produto['nome'] . " (estoque disponível: " . $produto['stock'] . ")";
+                            $insufficientStockItems[] = $produto['nome'] . " (stock disponível: " . $produto['stock'] . ")";
                         } else {
 
                             $newStock = $produto['stock'] - $item['quantity'];
@@ -215,7 +215,7 @@ class CartController
                 }
 
                 if (count($insufficientStockItems) > 0) {
-                    throw new Exception("Não há estoque suficiente para o(s) seguinte(s) produto(s): " . implode(', ', $insufficientStockItems));
+                    throw new Exception("Não há stock suficiente para o(s) seguinte(s) produto(s): " . implode(', ', $insufficientStockItems));
                 }
 
                 // Confirmar a transação, pois tudo ocorreu com sucesso

@@ -1,5 +1,5 @@
 <?php
-session_start();?>
+session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -53,11 +53,11 @@ session_start();?>
 
         <!-- Search Bar -->
         <div class="mb-6">
-            <input 
-                type="text" 
-                id="search-bar" 
-                onkeyup="filterProducts()" 
-                placeholder="Pesquisar produtos..." 
+            <input
+                type="text"
+                id="search-bar"
+                onkeyup="filterProducts()"
+                placeholder="Pesquisar produtos..."
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
@@ -72,7 +72,7 @@ session_start();?>
                     <?php endif; ?>
 
                     <img
-                        src="/assets/<?php echo htmlspecialchars($produto['imagem']); ?>"
+                        src="<?php echo htmlspecialchars($produto['imagem']); ?>"
                         alt="<?php echo htmlspecialchars($produto['nome']); ?>"
                         class="w-full h-48 object-cover">
 
