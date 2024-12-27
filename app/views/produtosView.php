@@ -1,5 +1,5 @@
 <?php
-session_start(); // Certifique-se de que a sessão esteja iniciada
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +23,7 @@ session_start(); // Certifique-se de que a sessão esteja iniciada
                 <?php foreach ($categorias as $categoria): ?>
                     <a href="/produtos/categoria/<?php echo htmlspecialchars($categoria['nome']); ?>"
                         class="relative block h-40 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
-                        <img src="../../assets/<?php echo htmlspecialchars($categoria['nome']); ?>.png"
+                        <img src="<?php echo htmlspecialchars($categoria['image_url']); ?>"
                             alt="<?php echo htmlspecialchars($categoria['nome']); ?>"
                             class="absolute inset-0 w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
