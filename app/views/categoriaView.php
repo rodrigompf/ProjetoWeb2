@@ -1,5 +1,6 @@
 <?php
-session_start(); ?>
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -8,6 +9,28 @@ session_start(); ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos de <?php echo htmlspecialchars($categoria); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .product-name {
+            height: 3rem; /* Altura fixa para o título */
+            line-height: 1.5rem; /* Espaçamento entre linhas */
+            overflow: hidden; /* Oculta texto extra */
+            text-overflow: ellipsis; /* Adiciona reticências */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limita a 2 linhas */
+            -webkit-box-orient: vertical;
+        }
+
+        .product-description {
+            height: 4rem; /* Altura fixa para a descrição */
+            line-height: 1.25rem; /* Espaçamento entre linhas */
+            overflow: hidden; /* Oculta texto extra */
+            text-overflow: ellipsis; /* Adiciona reticências */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limita a 3 linhas */
+            -webkit-box-orient: vertical;
+        }
+    </style>
 
     <script>
         async function addToCart(productId) {
@@ -94,7 +117,7 @@ session_start(); ?>
                                 </p>
                             <?php endif; ?>
                         </div>
-                        <p class="text-gray-600 mt-2">
+                        <p class="product-description text-gray-600 mt-2">
                             <?php echo htmlspecialchars($produto['descricao']); ?>
                         </p>
                         <button onclick="addToCart(<?php echo $produto['id']; ?>)"

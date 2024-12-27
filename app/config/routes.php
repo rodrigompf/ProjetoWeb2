@@ -97,4 +97,8 @@ return [
         'controller' => 'CartController',
         'action' => 'history'
     ],
+    'cart/history/details/{id}' => [
+    'controller' => 'CartController',
+    'action' => 'details'
+],
 ];

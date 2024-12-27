@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Certifique-se de que a variável $produtosComDesconto seja passada pelo controlador
 if (!isset($produtosComDesconto)) {
     die('Erro: Produtos não encontrados.'); // Mensagem para caso a variável não esteja definida
 }
@@ -26,13 +25,43 @@ if (!isset($produtosComDesconto)) {
         .product {
             width: 250px;
             margin-right: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
 
         .product img {
             height: 200px;
             object-fit: cover;
         }
+
+        .product-name {
+            min-height: 3rem; /* Garante espaço para até duas linhas */
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
     </style>
+    <script>
+        async function addToCart(productId) {
+            try {
+                const response = await fetch(`/cart/add/${productId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('Produto adicionado ao carrinho');
+                } else {
+                    alert('Erro ao adicionar ao carrinho');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao adicionar ao carrinho');
+            }
+        }
+    </script>
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -61,13 +90,17 @@ if (!isset($produtosComDesconto)) {
                             <?php endif; ?>
 
                             <div class="mt-4">
-                                <h3 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($produto['nome']) ?></h3>
+                                <h3 class="product-name text-xl font-semibold text-gray-800"><?= htmlspecialchars($produto['nome']) ?></h3>
                                 <p class="text-sm text-gray-500 mt-2">
                                     Preço Original: <span class="line-through text-gray-400"><?= number_format($produto['preco'], 2) ?>€</span>
                                 </p>
                                 <p class="text-lg text-green-600 font-semibold mt-2">
                                     Preço com Desconto: <?= number_format($produto['preco_com_desconto'], 2) ?>€
                                 </p>
+                                <button onclick="addToCart(<?= $produto['id'] ?>)"
+                                    class="mt-4 inline-block bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition">
+                                    Adicionar ao Carrinho
+                                </button>
                             </div>
                         </div>
                     <?php endforeach; ?>
