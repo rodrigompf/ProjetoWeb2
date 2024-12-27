@@ -2,10 +2,12 @@
 
 require_once './app/database/Connection.php';
 
-class CategoriasController {
+class CategoriasController
+{
 
     // Display all categories
-    public function index() {
+    public function index()
+    {
         try {
             $conn = Connection::getInstance();
 
@@ -13,7 +15,6 @@ class CategoriasController {
             $sql = "SELECT * FROM categorias ORDER BY nome ASC";
             $stmt = $conn->query($sql);
             $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             $categorias = [];
             $error = "Erro no banco de dados: " . $e->getMessage();
@@ -23,22 +24,25 @@ class CategoriasController {
     }
 
     // Add a new category
-    public function create() {
+    public function create()
+    {
         $error = null;
         $success = null;
-    
+
         try {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $nome = $_POST['nome'] ?? null;
-    
-                if (!$nome) {
-                    $error = "O campo Nome é obrigatório.";
+                $image_url = $_POST['image_url'] ?? null;
+
+                if (!$nome || !$image_url) {
+                    $error = "Os campos Nome e URL da Imagem são obrigatórios.";
                 } else {
                     $conn = Connection::getInstance();
-                    $sql = "INSERT INTO categorias (nome) VALUES (:nome)";
+                    $sql = "INSERT INTO categorias (nome, image_url) VALUES (:nome, :image_url)";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindParam(':nome', $nome);
-    
+                    $stmt->bindParam(':image_url', $image_url);
+
                     if ($stmt->execute()) {
                         // Redirect to the categorias view on success
                         header("Location: /categorias");
@@ -51,13 +55,13 @@ class CategoriasController {
         } catch (PDOException $e) {
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
-    
+
         require_once './app/views/addcategoriasView.php';
     }
-    
 
     // Delete a category
-    public function delete($id) {
+    public function delete($id)
+    {
         $error = null;
         $success = null;
 
