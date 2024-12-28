@@ -84,4 +84,53 @@ class CategoriasController
         header("Location: /categorias?success=" . urlencode($success) . "&error=" . urlencode($error));
         exit;
     }
+    public function edit($id)
+{
+    $error = null;
+    $success = null;
+
+    try {
+        $conn = Connection::getInstance();
+
+        // Fetch category details
+        $sql = "SELECT * FROM categorias WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $categoria = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$categoria) {
+            throw new Exception("Categoria não encontrada.");
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nome = $_POST['nome'] ?? null;
+            $image_url = $_POST['image_url'] ?? null;
+
+            if (!$nome || !$image_url) {
+                $error = "Os campos Nome e URL da Imagem são obrigatórios.";
+            } else {
+                // Update category in the database
+                $sql = "UPDATE categorias SET nome = :nome, image_url = :image_url WHERE id = :id";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':nome', $nome);
+                $stmt->bindParam(':image_url', $image_url);
+                $stmt->bindParam(':id', $id);
+
+                if ($stmt->execute()) {
+                    // Redirect to categorias view on success
+                    header("Location: /categorias");
+                    exit;
+                } else {
+                    $error = "Erro ao atualizar categoria.";
+                }
+            }
+        }
+    } catch (Exception $e) {
+        $error = $e->getMessage();
+    }
+
+    require_once './app/views/editcategoriasView.php';
+}
+
 }

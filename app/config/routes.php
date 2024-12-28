@@ -1,10 +1,13 @@
 <?php
 
 return [
+    // Home
     '' => [
         'controller' => 'homePageController',
         'action' => 'index'
     ],
+
+    // Produtos
     'produtos' => [
         'controller' => 'produtosController',
         'action' => 'index'
@@ -13,45 +16,9 @@ return [
         'controller' => 'AdminController',
         'action' => 'create'
     ],
-    'stock-management' => [
-    'controller' => 'StockManagementController',
-    'action' => 'index'
-    ],
-    'stock-management/add' => [
-    'controller' => 'StockManagementController',
-    'action' => 'addStock'
-    ],
-    'adminZone' => [
-        'controller' => 'adminController',
-        'action' => 'index',
-    ],
-    'categorias' => [
-        'controller' => 'CategoriasController',
-        'action' => 'index',
-    ],
-    'categorias/create' => [
-        'controller' => 'CategoriasController',
-        'action' => 'create',
-    ],
-    'categorias/delete/{id}' => [
-        'controller' => 'CategoriasController',
-        'action' => 'delete',
-    ],
     'produtos/store' => [
         'controller' => 'produtosController',
         'action' => 'store'
-    ],
-    'login' => [
-        'controller' => 'AuthController',
-        'action' => 'login',
-    ],
-    'register' => [
-        'controller' => 'AuthController',
-        'action' => 'register',
-    ],
-    'logout' => [
-        'controller' => 'AuthController',
-        'action' => 'logout',
     ],
     'produtos/categoria/{categoria}' => [
         'controller' => 'produtosController',
@@ -73,10 +40,62 @@ return [
         'controller' => 'AdminController',
         'action' => 'delete'
     ],
+
+    // Stock Management
+    'stock-management' => [
+        'controller' => 'StockManagementController',
+        'action' => 'index'
+    ],
+    'stock-management/add' => [
+        'controller' => 'StockManagementController',
+        'action' => 'addStock'
+    ],
+
+    // Categorias
+    'categorias' => [
+        'controller' => 'CategoriasController',
+        'action' => 'index'
+    ],
+    'categorias/create' => [
+        'controller' => 'CategoriasController',
+        'action' => 'create'
+    ],
+    'categorias/delete/{id}' => [
+        'controller' => 'CategoriasController',
+        'action' => 'delete'
+    ],
+    'categorias/edit/{id}' => [
+        'controller' => 'CategoriasController',
+        'action' => 'edit'
+    ],
+
+    // Admin Zone
+    'adminZone' => [
+        'controller' => 'adminController',
+        'action' => 'index'
+    ],
+
+    // Authentication
+    'login' => [
+        'controller' => 'AuthController',
+        'action' => 'login'
+    ],
+    'register' => [
+        'controller' => 'AuthController',
+        'action' => 'register'
+    ],
+    'logout' => [
+        'controller' => 'AuthController',
+        'action' => 'logout'
+    ],
+
+    // Promoções
     'todasPromocoes' => [
         'controller' => 'PromocoesController',
         'action' => 'index'
     ],
+
+    // Cart
     'cart' => [
         'controller' => 'CartController',
         'action' => 'index'
@@ -98,7 +117,7 @@ return [
         'action' => 'history'
     ],
     'cart/history/details/{id}' => [
-    'controller' => 'CartController',
-    'action' => 'details'
-],
+        'controller' => 'CartController',
+        'action' => 'details'
+    ],
 ];

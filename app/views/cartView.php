@@ -60,29 +60,37 @@
          * Função para finalizar a compra
          */
         async function finalizarCompra() {
-            try {
-                // Send purchase request to the server
-                const response = await fetch('/cart/buy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'error') {
-                    // Show the error message returned from PHP
-                    alert(data.message); // This will show the specific out-of-stock error or other issues
-                } else if (data.status === 'success') {
-                    alert(data.message);  // Success message
-                    window.location.href = '/';  // Redirect to the homepage or another page
-                }
-            } catch (error) {
-                console.error('Erro inesperado:', error);
-                alert("Ocorreu um erro ao finalizar a compra.");
+    try {
+        const response = await fetch('/cart/buy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             }
+        });
+
+        // Log the full response to see if it's HTML or JSON
+        const responseText = await response.text();
+        console.log('Response text:', responseText);
+
+        // Try parsing the response as JSON
+        const data = JSON.parse(responseText);
+
+        if (data.status === 'error') {
+            alert(`Erro: ${data.message}`);
+        } else if (data.status === 'success') {
+            alert(data.message);  
+            window.location.href = '/';  // Redirect after success
         }
+    } catch (error) {
+        console.error('Erro inesperado:', error);
+        alert("Ocorreu um erro ao finalizar a compra.");
+    }
+}
+
+
+
+
+
     </script>
 </head>
 

@@ -20,13 +20,17 @@
             <p class="text-green-500"><?= htmlspecialchars($success) ?></p>
         <?php endif; ?>
         <ul class="space-y-2">
-            <?php foreach ($categorias as $categoria): ?>
-                <li class="p-2 bg-gray-200 rounded flex justify-between items-center">
-                    <?= htmlspecialchars($categoria['nome']) ?>
-                    <a href="/categorias/delete/<?= $categoria['id'] ?>" class="text-red-500 hover:underline">Eliminar</a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+    <?php foreach ($categorias as $categoria): ?>
+        <li class="p-2 bg-gray-200 rounded flex justify-between items-center">
+            <?= htmlspecialchars($categoria['nome']) ?>
+            <div class="flex space-x-2">
+                <a href="/categorias/edit/<?= $categoria['id'] ?>" class="text-blue-500 hover:underline">Editar</a>
+                <a href="/categorias/delete/<?= $categoria['id'] ?>" class="text-red-500 hover:underline">Eliminar</a>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
         <a href="/categorias/create" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition">
             Adicionar Categoria
         </a>

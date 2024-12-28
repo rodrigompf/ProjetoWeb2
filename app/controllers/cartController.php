@@ -142,9 +142,96 @@ class CartController
 
     // Finalizar compra
     public function buy()
-    {
-        // Seu código para finalizar compra já está bem estruturado
+{
+    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+        $cartData = $_SESSION['cart'];
+        $totalPrice = 0;
+        $outOfStockItems = []; // Array to track out-of-stock items
+        $insufficientStockItems = []; // Array to track items with insufficient stock
+
+        // Calculate the total price of the cart
+        foreach ($cartData as $item) {
+            $totalPrice += $item['price_with_discount'] * $item['quantity'];
+        }
+
+        try {
+            // Start transaction for atomicity
+            $this->db->beginTransaction();
+
+            // Save purchase history
+            $this->savePurchaseHistory($cartData, $totalPrice);
+
+            // Update stock levels for each item in the cart
+            foreach ($cartData as $product_id => $item) {
+                // Fetch the current stock and product name
+                $stmt = $this->db->prepare("SELECT stock, nome FROM produtos WHERE id = ?");
+                $stmt->execute([$product_id]);
+                $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($produto) {
+                    if ($item['quantity'] > $produto['stock']) {
+                        $insufficientStockItems[] = $produto['nome'] . " (available stock: " . $produto['stock'] . ")";
+                    } else {
+                        $newStock = $produto['stock'] - $item['quantity'];
+
+                        // Update the stock
+                        $updateStmt = $this->db->prepare("UPDATE produtos SET stock = ? WHERE id = ?");
+                        $updateStmt->execute([$newStock, $product_id]);
+                    }
+                }
+            }
+
+            // If there are any out-of-stock items, throw an exception
+            if (count($insufficientStockItems) > 0) {
+                throw new Exception("There is insufficient stock for the following product(s): " . implode(', ', $insufficientStockItems));
+            }
+
+            // Commit the transaction if everything is successful
+            $this->db->commit();
+
+            // Clear the cart after successful purchase
+            unset($_SESSION['cart']);
+
+            // Set Content-Type to JSON
+            header('Content-Type: application/json');
+
+            // Return success message
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Purchase completed successfully!'
+            ]);
+            exit();
+
+        } catch (Exception $e) {
+            // Rollback the transaction if anything goes wrong
+            $this->db->rollBack();
+
+            // Log the error for debugging
+            error_log("Error during purchase process: " . $e->getMessage()); // Log the error message
+
+            // Set Content-Type to JSON
+            header('Content-Type: application/json');
+
+            // Return the specific error message to the client
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage() // This will include the "out of stock" error message if applicable
+            ]);
+            exit();
+        }
+    } else {
+        // If the cart is empty, return an error message
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'The cart is empty.'
+        ]);
+        exit();
     }
+}
+
+
+
 
     // Exibir o histórico de compras
     public function history()
@@ -164,6 +251,24 @@ class CartController
             require_once __DIR__ . '/../views/historyView.php';
         } catch (Exception $e) {
             echo "Erro ao carregar o histórico: " . $e->getMessage();
+        }
+    }
+    public function savePurchaseHistory($cartData, $totalPrice)
+    {
+        try {
+            // Assuming user ID is stored in session
+            $userId = $_SESSION['user']['id'] ?? 0;
+            $cartDataJson = json_encode($cartData); // Encode cart data as JSON string
+            
+            // Insert into the compras_historico table
+            $stmt = $this->db->prepare("INSERT INTO compras_historico (user_id, total_price, cart_data, created_at) VALUES (?, ?, ?, NOW())");
+            $stmt->execute([$userId, $totalPrice, $cartDataJson]);
+
+            // You could return the inserted ID for later use if necessary
+            return $this->db->lastInsertId(); // Optional
+        } catch (Exception $e) {
+            // Handle any database errors here
+            throw new Exception("Error saving purchase history: " . $e->getMessage());
         }
     }
 }
