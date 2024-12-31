@@ -14,7 +14,6 @@ class HomeModel
 
     public function getProdutosComDesconto(): array
     {
-        // SQL query to select products with discounts
         $query = "
             SELECT p.*, c.nome AS categoria_nome
             FROM produtos p
@@ -47,5 +46,13 @@ class HomeModel
 
         return $produtos;
     }
+
+    // Method to fetch banners
+    public function getBanners(): array
+    {
+        $query = "SELECT image_url FROM banners";
+        $stat = $this->db->prepare($query);
+        $stat->execute();
+        return $stat->fetchAll(PDO::FETCH_COLUMN); // Fetch only the image URLs
+    }
 }
-?>

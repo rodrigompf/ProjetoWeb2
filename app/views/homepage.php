@@ -30,31 +30,80 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             object-fit: cover;
         }
 
-        /* Estilo para o Banner */
         .banner-container {
-            position: relative;
-            width: 100%;
-            max-height: 400px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
+    position: relative;
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+}
 
-        .banner-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 1s ease-in-out;
-        }
+.banner-images-wrapper {
+    display: flex;
+    transition: transform 1s ease-in-out; /* Smooth slide transition */
+}
 
-        .banner {
-            display: flex;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+.banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#left-arrow, #right-arrow {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+}
+
+#left-arrow:hover, #right-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
     </style>
+    <script>
+        // Fetch the banner container and images wrapper
+        window.onload = function () {
+            const bannerImagesWrapper = document.getElementById('banner-images-wrapper');
+            const banners = bannerImagesWrapper.getElementsByTagName('img'); // Get all images
+            let currentIndex = 0;
+
+            // Function to change the banner with smooth slide effect
+            function changeBanner(newIndex) {
+                const totalBanners = banners.length;
+                
+                if (newIndex < 0) newIndex = totalBanners - 1; // Loop to the last banner
+                if (newIndex >= totalBanners) newIndex = 0; // Loop to the first banner
+
+                // Slide to the new banner (shift the container)
+                const offset = -100 * newIndex; // 100% width per image (since we want to slide it)
+                bannerImagesWrapper.style.transform = `translateX(${offset}%)`;
+
+                // Update current index
+                currentIndex = newIndex;
+            }
+
+            // Set interval for automatic banner change (every 5 seconds)
+            setInterval(() => {
+                changeBanner(currentIndex + 1); // Go to next banner
+            }, 5000);
+
+            // Add event listeners for left and right arrows
+            document.getElementById('left-arrow').addEventListener('click', () => {
+                changeBanner(currentIndex - 1); // Go to previous banner
+            });
+
+            document.getElementById('right-arrow').addEventListener('click', () => {
+                changeBanner(currentIndex + 1); // Go to next banner
+            });
+
+            // Initialize with the first banner
+            changeBanner(currentIndex);
+        };
+    </script>
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -88,15 +137,25 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             </nav>
         </div>
 
-        <!-- Banners rotativos de alimentos -->
-        <section class="mt-8">
-            <div class="banner-container" id="banner-container">
-                <div class="banner" id="banner">
-                    <!-- As imagens serão inseridas dinamicamente aqui -->
-                </div>
+         <section class="mt-8">
+            <div class="banner-container relative" id="banner-container">
+                <?php if (!empty($banners)): ?>
+                    <div class="banner-images-wrapper" id="banner-images-wrapper">
+                        <?php foreach ($banners as $banner): ?>
+                            <img src="<?= htmlspecialchars($banner) ?>" alt="Banner Image" class="w-full h-full object-cover" loading="lazy">
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <div class="absolute inset-0 flex justify-between items-center">
+                        <a href="javascript:void(0);" id="left-arrow" class="bg-gray-700 text-white px-3 py-2 rounded-full">‹</a>
+                        <a href="javascript:void(0);" id="right-arrow" class="bg-gray-700 text-white px-3 py-2 rounded-full">›</a>
+                    </div>
+                <?php else: ?>
+                    <p class="text-center text-gray-500">No banners available.</p>
+                <?php endif; ?>
             </div>
         </section>
-
         <section class="mt-8">
             <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
 
@@ -147,53 +206,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
         </div>
     </footer>
 
-    <script>
-        // Chave de API do Unsplash
-        const UNSPLASH_API_KEY = 'API_KEY';
-        const bannerContainer = document.getElementById('banner');
-
-        // Função para buscar imagens de comida
-        async function fetchFoodImages() {
-            try {
-                const response = await fetch(`https://api.unsplash.com/photos/random?query=food&count=4&client_id=${UNSPLASH_API_KEY}`);
-                const images = await response.json();
-
-                // Adiciona as imagens no banner
-                images.forEach(image => {
-                    const img = document.createElement('img');
-                    img.src = image.urls.regular;
-                    img.alt = "Imagem de comida";
-                    bannerContainer.appendChild(img);
-                });
-
-                // Inicia a rotação das imagens após o carregamento
-                changeBanner();
-            } catch (error) {
-                console.error('Erro ao buscar as imagens:', error);
-            }
-        }
-
-        // Função para mudar as imagens do banner
-        let currentIndex = 0;
-        let bannerImages = []; // Para armazenar as imagens carregadas
-
-        function changeBanner() {
-            // Carrega todas as imagens para a rotação
-            bannerImages = document.querySelectorAll('#banner img');
-            const totalImages = bannerImages.length;
-
-            if (totalImages > 0) {
-                bannerImages[currentIndex].style.opacity = 0; // Esconde a imagem atual
-                currentIndex = (currentIndex + 1) % totalImages;
-                bannerImages[currentIndex].style.opacity = 1; // Mostra a nova imagem
-            }
-        }
-
-        // Muda a cada 10 segundos
-        setInterval(changeBanner, 10000);
-
-        fetchFoodImages(); // Chama a função para carregar as imagens de comida
-    </script>
+    
 </body>
 
 </html>
