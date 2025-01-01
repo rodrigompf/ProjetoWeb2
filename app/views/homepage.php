@@ -30,7 +30,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             object-fit: cover;
         }
 
-        /* Estilos para o banner, incluindo efeitos de transição */
+        /* Estilos para o banner */
         .banner-container {
             position: relative;
             width: 100%;
@@ -40,14 +40,16 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
 
         .banner-images-wrapper {
             display: flex;
+            width: 100%;
+            height: 100%;
             transition: transform 1s ease-in-out;
-            /* Efeito de transição suave para o slide */
         }
 
-        .banner img {
+        .banner-images-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            flex-shrink: 0; /* Impede que as imagens encolham */
         }
 
         #left-arrow,
@@ -67,8 +69,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
         }
     </style>
     <script>
-        // Função que altera o banner com um efeito de transição suave
-        window.onload = function() {
+        window.onload = function () {
             const bannerImagesWrapper = document.getElementById('banner-images-wrapper');
             const banners = bannerImagesWrapper.getElementsByTagName('img'); // Obtém todas as imagens de banner
             let currentIndex = 0;
@@ -77,11 +78,11 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             function changeBanner(newIndex) {
                 const totalBanners = banners.length;
 
-                if (newIndex < 0) newIndex = totalBanners - 1; // Se a index for menor que 0, vai para o último banner
-                if (newIndex >= totalBanners) newIndex = 0; // Se a index for maior ou igual ao número total de banners, volta ao primeiro
+                if (newIndex < 0) newIndex = totalBanners - 1; // Vai para o último banner se passar para trás
+                if (newIndex >= totalBanners) newIndex = 0; // Volta ao primeiro banner se passar para frente
 
-                // Desloca o container para exibir o novo banner
-                const offset = -100 * newIndex; // Desloca 100% da largura de cada imagem (já que queremos um efeito de slide)
+                // Define o deslocamento horizontal para mostrar o banner atual
+                const offset = -100 * newIndex; // Cada banner ocupa 100% da largura do contêiner
                 bannerImagesWrapper.style.transform = `translateX(${offset}%)`;
 
                 // Atualiza o índice do banner atual
@@ -118,7 +119,6 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             <h2 class="text-2xl font-semibold mb-4">Bem-vindo ao nosso Supermercado!</h2>
             <nav>
                 <ul class="flex justify-center gap-6">
-                    <!-- Botão para visualizar os produtos -->
                     <div class="text-center mt-4">
                         <a href="/produtos" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
                             Ver Produtos
@@ -126,14 +126,12 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
                     </div>
 
                     <?php if ($isAdmin): ?>
-                        <!-- Botão para adicionar novo produto, visível apenas para administradores -->
                         <div class="text-center mt-4">
                             <a href="adminZone" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
                                 Adicionar Novo Produto
                             </a>
                         </div>
                     <?php endif; ?>
-
                 </ul>
             </nav>
         </div>
@@ -150,8 +148,8 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
 
                     <!-- Setas de navegação para alternar entre os banners -->
                     <div class="absolute inset-0 flex justify-between items-center">
-                        <a href="javascript:void(0);" id="left-arrow" class="bg-gray-700 text-white px-3 py-2 rounded-full">‹</a>
-                        <a href="javascript:void(0);" id="right-arrow" class="bg-gray-700 text-white px-3 py-2 rounded-full">›</a>
+                        <button id="left-arrow">‹</button>
+                        <button id="right-arrow">›</button>
                     </div>
                 <?php else: ?>
                     <p class="text-center text-gray-500">Não há banners disponíveis.</p>
@@ -163,46 +161,40 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
         <section class="mt-8">
             <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
 
-            <!-- Contêiner de Scroll Horizontal para as ofertas -->
-            <section class="mt-8">
-                <div class="offers-container">
-                    <?php if (!empty($produtosComDesconto)): ?>
-                        <?php foreach ($produtosComDesconto as $produto): ?>
-                            <div class="product bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition-all duration-200">
-                                <!-- Exibição da imagem do produto -->
-                                <?php if (!empty($produto['imagem'])): ?>
-                                    <img src="<?php echo htmlspecialchars($produto['imagem']); ?>"
-                                        alt="<?= htmlspecialchars($produto['nome']) ?>"
-                                        class="w-full h-48 object-cover rounded-md">
-                                <?php else: ?>
-                                    <div class="w-full h-48 bg-gray-300 flex items-center justify-center rounded-md">
-                                        <span class="text-gray-600">Sem Imagem</span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <div class="mt-4">
-                                    <h3 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($produto['nome']) ?></h3>
-                                    <p class="text-sm text-gray-500 mt-2">
-                                        Preço Original: <span class="line-through text-gray-400"><?= number_format($produto['preco'], 2) ?>€</span>
-                                    </p>
-                                    <p class="text-lg text-green-600 font-semibold mt-2">
-                                        Preço com Desconto: <?= number_format($produto['preco_com_desconto'], 2) ?>€
-                                    </p>
+            <div class="offers-container">
+                <?php if (!empty($produtosComDesconto)): ?>
+                    <?php foreach ($produtosComDesconto as $produto): ?>
+                        <div class="product bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition-all duration-200">
+                            <?php if (!empty($produto['imagem'])): ?>
+                                <img src="<?php echo htmlspecialchars($produto['imagem']); ?>" alt="<?= htmlspecialchars($produto['nome']) ?>" class="w-full h-48 object-cover rounded-md">
+                            <?php else: ?>
+                                <div class="w-full h-48 bg-gray-300 flex items-center justify-center rounded-md">
+                                    <span class="text-gray-600">Sem Imagem</span>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-gray-500 mt-4 text-center">Nenhuma oferta disponível no momento.</p>
-                    <?php endif; ?>
-                </div>
+                            <?php endif; ?>
 
-                <!-- Botão para ver todas as promoções -->
-                <div class="text-center mt-4">
-                    <a href="/todasPromocoes" class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-red-700 focus:outline-none">
-                        Ver todas as promoções
-                    </a>
-                </div>
-            </section>
+                            <div class="mt-4">
+                                <h3 class="text-xl font-semibold text-gray-800"><?= htmlspecialchars($produto['nome']) ?></h3>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    Preço Original: <span class="line-through text-gray-400"><?= number_format($produto['preco'], 2) ?>€</span>
+                                </p>
+                                <p class="text-lg text-green-600 font-semibold mt-2">
+                                    Preço com Desconto: <?= number_format($produto['preco_com_desconto'], 2) ?>€
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-gray-500 mt-4 text-center">Nenhuma oferta disponível no momento.</p>
+                <?php endif; ?>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/todasPromocoes" class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-red-700 focus:outline-none">
+                    Ver todas as promoções
+                </a>
+            </div>
+        </section>
     </main>
 
     <!-- Rodapé -->
