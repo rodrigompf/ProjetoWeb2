@@ -1,6 +1,6 @@
 <?php
-session_start(); // Certifique-se de que a sessão esteja iniciada
-$isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verifica se o usuário está logado e é administrador
+session_start(); // Inicia a sessão para garantir o acesso a variáveis de sessão
+$isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verifica se o utilizador está autenticado e se é administrador
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
     <title>Supermercado Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Horizontal Scroll Container */
+        /* Contêiner de Scroll Horizontal para as ofertas */
         .offers-container {
             display: flex;
             overflow-x: auto;
@@ -30,77 +30,79 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             object-fit: cover;
         }
 
+        /* Estilos para o banner, incluindo efeitos de transição */
         .banner-container {
-    position: relative;
-    width: 100%;
-    max-height: 400px;
-    overflow: hidden;
-}
+            position: relative;
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+        }
 
-.banner-images-wrapper {
-    display: flex;
-    transition: transform 1s ease-in-out; /* Smooth slide transition */
-}
+        .banner-images-wrapper {
+            display: flex;
+            transition: transform 1s ease-in-out;
+            /* Efeito de transição suave para o slide */
+        }
 
-.banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-#left-arrow, #right-arrow {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.6);
-    border: none;
-    padding: 10px;
-    border-radius: 50%;
-    color: white;
-    font-size: 18px;
-}
+        #left-arrow,
+        #right-arrow {
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+        }
 
-#left-arrow:hover, #right-arrow:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-
+        #left-arrow:hover,
+        #right-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
     </style>
     <script>
-        // Fetch the banner container and images wrapper
-        window.onload = function () {
+        // Função que altera o banner com um efeito de transição suave
+        window.onload = function() {
             const bannerImagesWrapper = document.getElementById('banner-images-wrapper');
-            const banners = bannerImagesWrapper.getElementsByTagName('img'); // Get all images
+            const banners = bannerImagesWrapper.getElementsByTagName('img'); // Obtém todas as imagens de banner
             let currentIndex = 0;
 
-            // Function to change the banner with smooth slide effect
+            // Função para mudar o banner
             function changeBanner(newIndex) {
                 const totalBanners = banners.length;
-                
-                if (newIndex < 0) newIndex = totalBanners - 1; // Loop to the last banner
-                if (newIndex >= totalBanners) newIndex = 0; // Loop to the first banner
 
-                // Slide to the new banner (shift the container)
-                const offset = -100 * newIndex; // 100% width per image (since we want to slide it)
+                if (newIndex < 0) newIndex = totalBanners - 1; // Se a index for menor que 0, vai para o último banner
+                if (newIndex >= totalBanners) newIndex = 0; // Se a index for maior ou igual ao número total de banners, volta ao primeiro
+
+                // Desloca o container para exibir o novo banner
+                const offset = -100 * newIndex; // Desloca 100% da largura de cada imagem (já que queremos um efeito de slide)
                 bannerImagesWrapper.style.transform = `translateX(${offset}%)`;
 
-                // Update current index
+                // Atualiza o índice do banner atual
                 currentIndex = newIndex;
             }
 
-            // Set interval for automatic banner change (every 5 seconds)
+            // Define o intervalo para troca automática de banners (a cada 5 segundos)
             setInterval(() => {
-                changeBanner(currentIndex + 1); // Go to next banner
+                changeBanner(currentIndex + 1); // Vai para o próximo banner
             }, 5000);
 
-            // Add event listeners for left and right arrows
+            // Adiciona ouvintes de eventos para as setas de navegação
             document.getElementById('left-arrow').addEventListener('click', () => {
-                changeBanner(currentIndex - 1); // Go to previous banner
+                changeBanner(currentIndex - 1); // Vai para o banner anterior
             });
 
             document.getElementById('right-arrow').addEventListener('click', () => {
-                changeBanner(currentIndex + 1); // Go to next banner
+                changeBanner(currentIndex + 1); // Vai para o próximo banner
             });
 
-            // Initialize with the first banner
+            // Inicializa o slideshow com o primeiro banner
             changeBanner(currentIndex);
         };
     </script>
@@ -116,16 +118,15 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             <h2 class="text-2xl font-semibold mb-4">Bem-vindo ao nosso Supermercado!</h2>
             <nav>
                 <ul class="flex justify-center gap-6">
-                    <!-- Botão de Ver Produtos -->
+                    <!-- Botão para visualizar os produtos -->
                     <div class="text-center mt-4">
-                        <!-- Ver Produtos Button -->
                         <a href="/produtos" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
                             Ver Produtos
                         </a>
                     </div>
 
                     <?php if ($isAdmin): ?>
-                        <!-- Adicionar Novo Produto Button -->
+                        <!-- Botão para adicionar novo produto, visível apenas para administradores -->
                         <div class="text-center mt-4">
                             <a href="adminZone" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
                                 Adicionar Novo Produto
@@ -137,41 +138,45 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
             </nav>
         </div>
 
-         <section class="mt-8">
+        <!-- Seção de banners -->
+        <section class="mt-8">
             <div class="banner-container relative" id="banner-container">
                 <?php if (!empty($banners)): ?>
                     <div class="banner-images-wrapper" id="banner-images-wrapper">
                         <?php foreach ($banners as $banner): ?>
-                            <img src="<?= htmlspecialchars($banner) ?>" alt="Banner Image" class="w-full h-full object-cover" loading="lazy">
+                            <img src="<?= htmlspecialchars($banner) ?>" alt="Imagem do Banner" class="w-full h-full object-cover" loading="lazy">
                         <?php endforeach; ?>
                     </div>
 
-                    <!-- Navigation Arrows -->
+                    <!-- Setas de navegação para alternar entre os banners -->
                     <div class="absolute inset-0 flex justify-between items-center">
                         <a href="javascript:void(0);" id="left-arrow" class="bg-gray-700 text-white px-3 py-2 rounded-full">‹</a>
                         <a href="javascript:void(0);" id="right-arrow" class="bg-gray-700 text-white px-3 py-2 rounded-full">›</a>
                     </div>
                 <?php else: ?>
-                    <p class="text-center text-gray-500">No banners available.</p>
+                    <p class="text-center text-gray-500">Não há banners disponíveis.</p>
                 <?php endif; ?>
             </div>
         </section>
+
+        <!-- Seção de Ofertas Imperdíveis -->
         <section class="mt-8">
             <h2 class="text-2xl font-semibold text-center text-green-600 mb-4">Ofertas Imperdíveis!</h2>
 
-            <!-- Scroll Container -->
+            <!-- Contêiner de Scroll Horizontal para as ofertas -->
             <section class="mt-8">
                 <div class="offers-container">
                     <?php if (!empty($produtosComDesconto)): ?>
                         <?php foreach ($produtosComDesconto as $produto): ?>
                             <div class="product bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition-all duration-200">
+                                <!-- Exibição da imagem do produto -->
                                 <?php if (!empty($produto['imagem'])): ?>
                                     <img src="<?php echo htmlspecialchars($produto['imagem']); ?>"
                                         alt="<?= htmlspecialchars($produto['nome']) ?>"
                                         class="w-full h-48 object-cover rounded-md">
                                 <?php else: ?>
                                     <div class="w-full h-48 bg-gray-300 flex items-center justify-center rounded-md">
-                                        <span class="text-gray-600">No Image</span>
+                                        <span class="text-gray-600">Sem Imagem</span>
                                     </div>
                                 <?php endif; ?>
 
@@ -190,6 +195,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
                         <p class="text-gray-500 mt-4 text-center">Nenhuma oferta disponível no momento.</p>
                     <?php endif; ?>
                 </div>
+
                 <!-- Botão para ver todas as promoções -->
                 <div class="text-center mt-4">
                     <a href="/todasPromocoes" class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-red-700 focus:outline-none">
@@ -206,7 +212,6 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
         </div>
     </footer>
 
-    
 </body>
 
 </html>

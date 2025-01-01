@@ -6,12 +6,18 @@ class HomeModel
 {
     private $db;
 
+    /**
+     * Construtor que inicializa a conexão com a base de dados
+     */
     public function __construct()
     {
-        // Assuming Connection::getInstance() returns a PDO instance
+        // Supõe-se que Connection::getInstance() retorna uma instância de PDO
         $this->db = Connection::getInstance();
     }
 
+    /**
+     * Obtém os produtos com desconto e calcula o preço com o desconto aplicado.
+     */
     public function getProdutosComDesconto(): array
     {
         $query = "
@@ -22,37 +28,41 @@ class HomeModel
             ORDER BY p.preco DESC
         ";
 
-        // Prepare and execute the query
+        // Prepara e executa a consulta
         $stat = $this->db->prepare($query);
         $stat->execute();
 
-        // Fetch all the results
+        // Obtém todos os resultados
         $produtos = $stat->fetchAll(PDO::FETCH_ASSOC);
 
-        // Process each product to calculate the discounted price
+        // Processa cada produto para calcular o preço com o desconto
         foreach ($produtos as &$produto) {
             $preco = $produto['preco'];
             $descontoPercentual = $produto['discount_price'];
 
-            // Check if there's a discount and apply it
+            // Verifica se há desconto e aplica-o
             if ($produto['desconto'] == 1 && $descontoPercentual > 0) {
-                // Calculate price after discount
+                // Calcula o preço após o desconto
                 $produto['preco_com_desconto'] = $preco * (1 - ($descontoPercentual / 100));
             } else {
-                // If no discount, price with discount is the same as the original
+                // Se não houver desconto, o preço com desconto é o mesmo que o preço original
                 $produto['preco_com_desconto'] = $preco;
             }
         }
 
+        // Retorna a lista de produtos com o preço com desconto calculado
         return $produtos;
     }
 
-    // Method to fetch banners
+    /**
+     * Obtém todos os banners da base de dados.
+     */
     public function getBanners(): array
     {
         $query = "SELECT image_url FROM banners";
         $stat = $this->db->prepare($query);
         $stat->execute();
-        return $stat->fetchAll(PDO::FETCH_COLUMN); // Fetch only the image URLs
+        // Retorna apenas os URLs das imagens
+        return $stat->fetchAll(PDO::FETCH_COLUMN);
     }
 }

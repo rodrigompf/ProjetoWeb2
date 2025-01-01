@@ -6,69 +6,82 @@ class AuthController
 {
     private $userModel;
 
+    // Construtor para inicializar o modelo de utilizador
     public function __construct()
     {
         $this->userModel = new UserModel();
     }
 
+    // Método para registar um novo utilizador
     public function register()
     {
+        // Verifica se o método de requisição é POST (formulário submetido)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Captura os dados enviados pelo formulário
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
 
+            // Tenta criar um novo utilizador
             if ($this->userModel->createUser($username, $email, $password)) {
+                // Se o registo for bem-sucedido, redireciona para a página de login
                 header('Location: /login');
                 exit;
             } else {
-                echo "Error registering user.";
+                // Caso contrário, apresenta uma mensagem de erro
+                echo "Erro ao registar utilizador.";
             }
         }
 
+        // Inclui a vista para o formulário de registo
         require_once './app/views/registerView.php';
     }
 
+    // Método para autenticar um utilizador
     public function login()
     {
+        // Verifica se o método de requisição é POST (formulário submetido)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Retrieve form data
+            // Captura os dados enviados pelo formulário
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            // Attempt to authenticate the user
+            // Tenta autenticar o utilizador através do modelo
             $user = $this->userModel->login($email, $password);
 
-            // Check if the user exists and password matches
+            // Verifica se o utilizador existe e se a palavra-passe corresponde
             if ($user) {
-                // Start a session and store user data
+                // Inicia uma sessão e armazena os dados do utilizador na sessão
                 session_start();
                 $_SESSION['user'] = $user;
 
-                // Redirect to the home page or any other page after successful login
-                header('Location: /');  // Assuming / is the homepage route
+                // Redireciona para a página inicial ou qualquer outra página após login bem-sucedido
+                header('Location: /'); // Supondo que '/' é a rota da página inicial
                 exit;
             } else {
-                // If login fails, set an error message (can be passed to the view)
-                $error = "Invalid email or password.";
+                // Define uma mensagem de erro caso a autenticação falhe
+                $error = "Email ou palavra-passe inválidos.";
             }
         }
 
-        // Render the login view
+        // Inclui a vista para o formulário de login
         require_once './app/views/loginView.php';
     }
 
-
-
+    // Método para terminar a sessão (logout)
     public function logout()
     {
+        // Verifica se a sessão está iniciada
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
+        // Limpa e destrói a sessão atual
         session_unset();
         session_destroy();
-        header('Location: /'); // Redireciona para a página inicial
+
+        // Redireciona para a página inicial após o logout
+        header('Location: /');
         exit();
     }
 }

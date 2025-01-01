@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); // Inicia a sessão, caso ainda não tenha sido iniciada
 ?>
 
 <!DOCTYPE html>
@@ -13,13 +13,18 @@ session_start();
 </head>
 
 <body class="bg-gray-100">
+    <!-- Cabeçalho da página -->
     <?php include './app/views/header.php'; ?>
 
+    <!-- Conteúdo principal da página -->
     <div class="container mx-auto py-10">
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Explore as nossas categorias</h1>
 
+        <!-- Grid para exibir as categorias -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Verifica se há categorias -->
             <?php if (!empty($categorias)): ?>
+                <!-- Loop para exibir cada categoria -->
                 <?php foreach ($categorias as $categoria): ?>
                     <a href="/produtos/categoria/<?php echo htmlspecialchars($categoria['nome']); ?>"
                         class="relative block h-40 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
@@ -32,10 +37,12 @@ session_start();
                     </a>
                 <?php endforeach; ?>
             <?php else: ?>
+                <!-- Mensagem caso não existam categorias -->
                 <p class="text-gray-500 text-lg text-center">Nenhuma categoria encontrada.</p>
             <?php endif; ?>
         </div>
 
+        <!-- Mensagem informativa sobre a seleção de categorias -->
         <div class="mt-12">
             <p class="text-gray-500 text-lg text-center">Escolha uma categoria para ver os produtos.</p>
         </div>

@@ -11,7 +11,7 @@ class CartController
         $this->db = Connection::getInstance();
     }
 
-    // Exibir Conteúdo do Carrinho
+    // Exibir conteúdo do carrinho
     public function index()
     {
         require_once __DIR__ . '/../models/ProdutosModel.php';
@@ -37,19 +37,21 @@ class CartController
             }
         }
 
+        // Exibir a vista do carrinho
         require_once __DIR__ . '/../views/cartView.php';
     }
 
-    // Exibir detalhes de uma compra
+    // Exibir os detalhes de uma compra
     public function details($id)
     {
         try {
-            // Buscar detalhes da compra pelo ID
+            // Buscar os detalhes da compra pelo ID
             $stmt = $this->db->prepare("SELECT * FROM compras_historico WHERE id = ?");
             $stmt->execute([$id]);
             $purchaseDetails = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$purchaseDetails) {
+                // Caso a compra não seja encontrada, retorna um erro 404
                 header("HTTP/1.0 404 Not Found");
                 echo "Compra não encontrada.";
                 exit();
@@ -63,29 +65,36 @@ class CartController
                 $purchaseDetails['cart_data'] = [];
             }
 
+            // Exibir os detalhes da compra
             require_once __DIR__ . '/../views/purchaseDetailsView.php';
         } catch (Exception $e) {
+            // Caso ocorra um erro ao carregar os detalhes
             echo "Erro ao carregar os detalhes: " . $e->getMessage();
         }
     }
 
 
-    // Adicionar produto ao carrinho
+    // Adicionar um produto ao carrinho
     public function add($product_id)
     {
         require_once __DIR__ . '/../models/ProdutosModel.php';
         $model = new ProdutosModel();
 
+        // Obter o produto pelo ID
         $produto = $model->getProdutoById((int)$product_id);
 
         if ($produto) {
+            // Inicializar o carrinho se não existir
             if (!isset($_SESSION['cart'])) {
                 $_SESSION['cart'] = [];
             }
 
+            // Verificar se o produto já existe no carrinho
             if (isset($_SESSION['cart'][$product_id])) {
+                // Aumentar a quantidade se o produto já estiver no carrinho
                 $_SESSION['cart'][$product_id]['quantity'] += 1;
             } else {
+                // Caso contrário, adicionar o produto ao carrinho
                 $_SESSION['cart'][$product_id] = [
                     'name' => $produto['nome'],
                     'imagem' => $produto['imagem'],
@@ -96,37 +105,46 @@ class CartController
                 ];
             }
 
+            // Retornar sucesso como resposta em formato JSON
             echo json_encode(['status' => 'success', 'message' => 'Produto adicionado ao carrinho']);
             exit();
         } else {
+            // Caso o produto não exista, retornar erro
             echo json_encode(['status' => 'error', 'message' => 'Erro ao adicionar produto ao carrinho']);
             exit();
         }
     }
 
-    // Remover produto do carrinho
+    // Remover um produto do carrinho
     public function remove($product_id)
     {
+        // Verificar se o produto existe no carrinho
         if (!isset($_SESSION['cart'][$product_id])) {
+            // Caso não exista, retornar erro 404
             header('HTTP/1.1 404 Not Found');
             echo json_encode(['status' => 'error', 'message' => 'Produto não encontrado no carrinho']);
             exit();
         }
 
+        // Obter os dados da quantidade a ser removida
         $data = json_decode(file_get_contents('php://input'), true);
         $action = $data['quantity'] ?? '1';
 
+        // Caso a ação seja remover todos os itens
         if ($action === 'all') {
             unset($_SESSION['cart'][$product_id]);
         } else {
+            // Caso contrário, remover a quantidade especificada
             $qtyToRemove = (int)$action;
             $_SESSION['cart'][$product_id]['quantity'] -= $qtyToRemove;
 
+            // Caso a quantidade seja 0 ou menor, remover o produto do carrinho
             if ($_SESSION['cart'][$product_id]['quantity'] <= 0) {
                 unset($_SESSION['cart'][$product_id]);
             }
         }
 
+        // Retornar sucesso como resposta em formato JSON
         header('HTTP/1.1 200 OK');
         echo json_encode(['status' => 'success']);
         exit();
@@ -135,103 +153,104 @@ class CartController
     // Limpar o carrinho
     public function cleanCart()
     {
+        // Remover todos os itens do carrinho
         unset($_SESSION['cart']);
+        // Retornar sucesso como resposta em formato JSON
         echo json_encode(['status' => 'success', 'message' => 'Carrinho limpo com sucesso']);
         exit();
     }
 
-    // Finalizar compra
+    // Finalizar a compra
     public function buy()
-{
-    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-        $cartData = $_SESSION['cart'];
-        $totalPrice = 0;
-        $outOfStockItems = []; // Array to track out-of-stock items
-        $insufficientStockItems = []; // Array to track items with insufficient stock
+    {
+        if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+            $cartData = $_SESSION['cart'];
+            $totalPrice = 0;
+            $outOfStockItems = []; // Array para armazenar itens fora de estoque
+            $insufficientStockItems = []; // Array para armazenar itens com estoque insuficiente
 
-        // Calculate the total price of the cart
-        foreach ($cartData as $item) {
-            $totalPrice += $item['price_with_discount'] * $item['quantity'];
-        }
+            // Calcular o preço total do carrinho
+            foreach ($cartData as $item) {
+                $totalPrice += $item['price_with_discount'] * $item['quantity'];
+            }
 
-        try {
-            // Start transaction for atomicity
-            $this->db->beginTransaction();
+            try {
+                // Iniciar transação para garantir atomicidade
+                $this->db->beginTransaction();
 
-            // Save purchase history
-            $this->savePurchaseHistory($cartData, $totalPrice);
+                // Salvar o histórico da compra
+                $this->savePurchaseHistory($cartData, $totalPrice);
 
-            // Update stock levels for each item in the cart
-            foreach ($cartData as $product_id => $item) {
-                // Fetch the current stock and product name
-                $stmt = $this->db->prepare("SELECT stock, nome FROM produtos WHERE id = ?");
-                $stmt->execute([$product_id]);
-                $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+                // Atualizar o estoque de cada item no carrinho
+                foreach ($cartData as $product_id => $item) {
+                    // Buscar o estoque atual e nome do produto
+                    $stmt = $this->db->prepare("SELECT stock, nome FROM produtos WHERE id = ?");
+                    $stmt->execute([$product_id]);
+                    $produto = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($produto) {
-                    if ($item['quantity'] > $produto['stock']) {
-                        $insufficientStockItems[] = $produto['nome'] . " (available stock: " . $produto['stock'] . ")";
-                    } else {
-                        $newStock = $produto['stock'] - $item['quantity'];
+                    if ($produto) {
+                        // Verificar se a quantidade no carrinho excede o estoque
+                        if ($item['quantity'] > $produto['stock']) {
+                            // Caso não haja estoque suficiente, adicionar ao array de itens sem estoque
+                            $insufficientStockItems[] = $produto['nome'] . " (estoque disponível: " . $produto['stock'] . ")";
+                        } else {
+                            // Atualizar o estoque do produto
+                            $newStock = $produto['stock'] - $item['quantity'];
 
-                        // Update the stock
-                        $updateStmt = $this->db->prepare("UPDATE produtos SET stock = ? WHERE id = ?");
-                        $updateStmt->execute([$newStock, $product_id]);
+                            // Atualizar a quantidade de estoque no banco de dados
+                            $updateStmt = $this->db->prepare("UPDATE produtos SET stock = ? WHERE id = ?");
+                            $updateStmt->execute([$newStock, $product_id]);
+                        }
                     }
                 }
+
+                // Caso haja itens fora de estoque, lançar exceção
+                if (count($insufficientStockItems) > 0) {
+                    throw new Exception("Não há stock suficiente para os seguintes produtos: " . implode(', ', $insufficientStockItems));
+                }
+
+                // Se tudo ocorrer bem, realizar o commit da transação
+                $this->db->commit();
+
+                // Limpar o carrinho após a compra bem-sucedida
+                unset($_SESSION['cart']);
+
+                // Definir o tipo de conteúdo como JSON
+                header('Content-Type: application/json');
+
+                // Retornar sucesso como resposta
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Compra finalizada com sucesso!'
+                ]);
+                exit();
+            } catch (Exception $e) {
+                // Se ocorrer algum erro, realizar o rollback da transação
+                $this->db->rollBack();
+
+                // Registrar o erro para debug
+                error_log("Erro durante o processo de compra: " . $e->getMessage()); // Registrar a mensagem de erro
+
+                // Definir o tipo de conteúdo como JSON
+                header('Content-Type: application/json');
+
+                // Retornar a mensagem de erro específica
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => $e->getMessage() // Isso incluirá a mensagem de erro sobre itens fora de stock, se aplicável
+                ]);
+                exit();
             }
-
-            // If there are any out-of-stock items, throw an exception
-            if (count($insufficientStockItems) > 0) {
-                throw new Exception("There is insufficient stock for the following product(s): " . implode(', ', $insufficientStockItems));
-            }
-
-            // Commit the transaction if everything is successful
-            $this->db->commit();
-
-            // Clear the cart after successful purchase
-            unset($_SESSION['cart']);
-
-            // Set Content-Type to JSON
+        } else {
+            // Se o carrinho estiver vazio, retornar erro
             header('Content-Type: application/json');
-
-            // Return success message
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Purchase completed successfully!'
-            ]);
-            exit();
-
-        } catch (Exception $e) {
-            // Rollback the transaction if anything goes wrong
-            $this->db->rollBack();
-
-            // Log the error for debugging
-            error_log("Error during purchase process: " . $e->getMessage()); // Log the error message
-
-            // Set Content-Type to JSON
-            header('Content-Type: application/json');
-
-            // Return the specific error message to the client
             echo json_encode([
                 'status' => 'error',
-                'message' => $e->getMessage() // This will include the "out of stock" error message if applicable
+                'message' => 'O carrinho está vazio.'
             ]);
             exit();
         }
-    } else {
-        // If the cart is empty, return an error message
-        header('Content-Type: application/json');
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'The cart is empty.'
-        ]);
-        exit();
     }
-}
-
-
-
 
     // Exibir o histórico de compras
     public function history()
@@ -239,36 +258,42 @@ class CartController
         $userId = $_SESSION['user']['id'] ?? 0;
 
         try {
+            // Buscar o histórico de compras do utilizador
             $stmt = $this->db->prepare("SELECT * FROM compras_historico WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
             $stmt->execute([$userId]);
             $purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (empty($purchases)) {
+                // Caso o utilizador não tenha compras, exibir mensagem
                 echo "Nenhuma compra encontrada.";
                 exit();
             }
 
+            // Exibir o histórico de compras
             require_once __DIR__ . '/../views/historyView.php';
         } catch (Exception $e) {
+            // Caso ocorra erro ao carregar o histórico
             echo "Erro ao carregar o histórico: " . $e->getMessage();
         }
     }
+
+    // Salvar o histórico da compra no banco de dados
     public function savePurchaseHistory($cartData, $totalPrice)
     {
         try {
-            // Assuming user ID is stored in session
+            // Supondo que o ID do utilizador esteja armazenado na sessão
             $userId = $_SESSION['user']['id'] ?? 0;
-            $cartDataJson = json_encode($cartData); // Encode cart data as JSON string
-            
-            // Insert into the compras_historico table
+            $cartDataJson = json_encode($cartData); // Codificar os dados do carrinho como string JSON
+
+            // Inserir o histórico de compra na tabela compras_historico
             $stmt = $this->db->prepare("INSERT INTO compras_historico (user_id, total_price, cart_data, created_at) VALUES (?, ?, ?, NOW())");
             $stmt->execute([$userId, $totalPrice, $cartDataJson]);
 
-            // You could return the inserted ID for later use if necessary
-            return $this->db->lastInsertId(); // Optional
+            // Retornar o ID inserido (opcional, caso necessário para futuras operações)
+            return $this->db->lastInsertId();
         } catch (Exception $e) {
-            // Handle any database errors here
-            throw new Exception("Error saving purchase history: " . $e->getMessage());
+            // Caso ocorra erro ao salvar o histórico de compra
+            throw new Exception("Erro ao salvar o histórico de compras: " . $e->getMessage());
         }
     }
 }

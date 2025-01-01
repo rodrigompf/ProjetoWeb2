@@ -8,49 +8,61 @@ class UserModel
 
     public function __construct()
     {
-        $this->db = Connection::getInstance();  // Initialize database connection
+        // Inicializa a conexão com a base de dados
+        $this->db = Connection::getInstance();
     }
 
-    // Get a user by their username (used for login or checking existing users)
+    /**
+     * Obtém um utilizador pelo seu nome de utilizador (usado para login ou para verificar utilizadores existentes).
+     */
     public function getUserByUsername($username)
     {
-        $query = "SELECT * FROM users WHERE username = :username"; // Query to fetch user by username
-        $stmt = $this->db->prepare($query);  // Prepare the SQL statement
-        $stmt->execute([':username' => $username]);  // Execute with the given username
+        // Consulta SQL para buscar o utilizador pelo nome de utilizador
+        $query = "SELECT * FROM users WHERE username = :username";
+        $stmt = $this->db->prepare($query);  // Prepara a instrução SQL
+        $stmt->execute([':username' => $username]);  // Executa a consulta com o nome de utilizador fornecido
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);  // Return the result as an associative array
+        // Retorna o resultado como um array associativo (ou null se não houver resultados)
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Create a new user (used for registration)
-        public function createUser($username, $email, $password)
+    /**
+     * Cria um novo utilizador (usado para o registo).
+     */
+    public function createUser($username, $email, $password)
     {
+        // Consulta SQL para inserir um novo utilizador na base de dados
         $query = "INSERT INTO users (username, email, password, admin) VALUES (:username, :email, :password, :admin)";
         $stmt = $this->db->prepare($query);
+
+        // Executa a inserção do novo utilizador com a palavra-passe encriptada
         return $stmt->execute([
             ':username' => $username,
             ':email' => $email,
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':admin' => false,  // Admin is always set to false by default
+            ':password' => password_hash($password, PASSWORD_DEFAULT),  // Encripta a palavra-passe antes de armazenar
+            ':admin' => false,  // O utilizador é sempre definido como não admin por padrão
         ]);
     }
 
-    // Authenticate user (used for login)
+    /**
+     * Autentica um utilizador (usado para login).
+     */
     public function login($email, $password)
     {
-        // Fetch user by email
+        // Consulta SQL para buscar o utilizador pelo email
         $query = "SELECT * FROM users WHERE email = :email";
         $stmt = $this->db->prepare($query);
         $stmt->execute([':email' => $email]);
 
-        // Get user data from the database
+        // Obtém os dados do utilizador da base de dados
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Check if user exists and verify the password
+        // Verifica se o utilizador existe e se a palavra-passe é correta
         if ($user && password_verify($password, $user['password'])) {
-            return $user;  // Return user data if credentials are correct
+            return $user;  // Retorna os dados do utilizador se as credenciais estiverem corretas
         }
 
-        return false;  // Return false if login fails
+        // Retorna false se a autenticação falhar
+        return false;
     }
 }
-?>

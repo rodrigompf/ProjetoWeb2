@@ -11,34 +11,50 @@ session_start();
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        /* Estilo para o nome do produto, limitando o número de linhas exibidas */
         .product-name {
-            height: 3rem; /* Altura fixa para o título */
-            line-height: 1.5rem; /* Espaçamento entre linhas */
-            overflow: hidden; /* Oculta texto extra */
-            text-overflow: ellipsis; /* Adiciona reticências */
+            height: 3rem;
+            /* Altura fixa para o título */
+            line-height: 1.5rem;
+            /* Espaçamento entre linhas */
+            overflow: hidden;
+            /* Oculta texto extra */
+            text-overflow: ellipsis;
+            /* Adiciona reticências */
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Limita a 2 linhas */
+            -webkit-line-clamp: 2;
+            /* Limita a 2 linhas */
             -webkit-box-orient: vertical;
         }
 
+        /* Estilo para a descrição do produto, limitando o número de linhas exibidas */
         .product-description {
-            height: 4rem; /* Altura fixa para a descrição */
-            line-height: 1.25rem; /* Espaçamento entre linhas */
-            overflow: hidden; /* Oculta texto extra */
-            text-overflow: ellipsis; /* Adiciona reticências */
+            height: 4rem;
+            /* Altura fixa para a descrição */
+            line-height: 1.25rem;
+            /* Espaçamento entre linhas */
+            overflow: hidden;
+            /* Oculta texto extra */
+            text-overflow: ellipsis;
+            /* Adiciona reticências */
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* Limita a 3 linhas */
+            -webkit-line-clamp: 3;
+            /* Limita a 3 linhas */
             -webkit-box-orient: vertical;
         }
     </style>
 
     <script>
+        /**
+         * Função para adicionar um produto ao carrinho
+         */
         async function addToCart(productId) {
             try {
                 const response = await fetch(`/cart/add/${productId}`, {
                     method: 'POST'
                 });
 
+                // Verifica se a resposta foi bem-sucedida
                 if (response.ok) {
                     alert('Produto adicionado ao carrinho');
                 } else {
@@ -50,16 +66,20 @@ session_start();
             }
         }
 
+        /**
+         * Função para filtrar os produtos com base no texto digitado na barra de pesquisa
+         */
         function filterProducts() {
-            const query = document.getElementById('search-bar').value.toLowerCase();
-            const products = document.querySelectorAll('.product-item');
+            const query = document.getElementById('search-bar').value.toLowerCase(); // Obtém o valor da pesquisa
+            const products = document.querySelectorAll('.product-item'); // Obtém todos os itens de produto
 
+            // Filtra os produtos
             products.forEach(product => {
                 const name = product.querySelector('.product-name').textContent.toLowerCase();
                 if (name.includes(query)) {
-                    product.style.display = 'block';
+                    product.style.display = 'block'; // Exibe o produto se corresponder à pesquisa
                 } else {
-                    product.style.display = 'none';
+                    product.style.display = 'none'; // Oculta o produto se não corresponder
                 }
             });
         }
@@ -70,11 +90,12 @@ session_start();
     <?php include './app/views/header.php'; ?>
 
     <div class="container mx-auto py-10">
+        <!-- Título da página com a categoria -->
         <h1 class="text-3xl font-bold text-gray-800 mb-6">
             Produtos da Categoria <?php echo htmlspecialchars($categoria); ?>
         </h1>
 
-        <!-- Search Bar -->
+        <!-- Barra de pesquisa para filtrar produtos -->
         <div class="mb-6">
             <input
                 type="text"
@@ -84,26 +105,30 @@ session_start();
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- Products Grid -->
+        <!-- Grade de Produtos -->
         <div id="products-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <?php foreach ($produtosView as $produto): ?>
                 <div class="product-item bg-white rounded-lg shadow-lg overflow-hidden relative">
+                    <!-- Verifica se o produto tem desconto e exibe o valor do desconto -->
                     <?php if ($produto['desconto'] == 1 && $produto['discount_price'] > 0): ?>
                         <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                             -<?php echo htmlspecialchars($produto['discount_price']); ?>%
                         </div>
                     <?php endif; ?>
 
+                    <!-- Imagem do produto -->
                     <img
                         src="<?php echo htmlspecialchars($produto['imagem']); ?>"
                         alt="<?php echo htmlspecialchars($produto['nome']); ?>"
                         class="w-full h-48 object-cover">
 
                     <div class="p-4">
+                        <!-- Nome do produto -->
                         <h3 class="product-name text-lg font-bold">
                             <?php echo htmlspecialchars($produto['nome']); ?>
                         </h3>
                         <div class="mt-2">
+                            <!-- Exibe o preço original com o desconto, se houver -->
                             <?php if ($produto['precoDescontado'] < $produto['preco']): ?>
                                 <p class="text-gray-500 line-through">
                                     €<?php echo number_format($produto['preco'], 2); ?>
@@ -117,9 +142,11 @@ session_start();
                                 </p>
                             <?php endif; ?>
                         </div>
+                        <!-- Descrição do produto -->
                         <p class="product-description text-gray-600 mt-2">
                             <?php echo htmlspecialchars($produto['descricao']); ?>
                         </p>
+                        <!-- Botão para adicionar o produto ao carrinho -->
                         <button onclick="addToCart(<?php echo $produto['id']; ?>)"
                             class="mt-4 inline-block bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition">
                             Adicionar ao Carrinho

@@ -9,7 +9,7 @@
 
     <script>
         /**
-         * Função para remover 1 item
+         * Função para remover 1 item do carrinho.
          */
         async function remove1(productId) {
             try {
@@ -19,11 +19,11 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        quantity: 1
+                        quantity: 1 // Remover apenas 1 unidade
                     })
                 });
                 if (response.ok) {
-                    location.reload();
+                    location.reload(); // Recarrega a página para atualizar o carrinho
                 } else {
                     console.error('Falha ao remover 1 item.');
                 }
@@ -33,7 +33,7 @@
         }
 
         /**
-         * Função para remover todos os itens
+         * Função para remover todos os itens de um produto do carrinho.
          */
         async function removeAll(productId) {
             try {
@@ -43,11 +43,11 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        quantity: 'all'
+                        quantity: 'all' // Remover todos os itens
                     })
                 });
                 if (response.ok) {
-                    location.reload();
+                    location.reload(); // Recarrega a página para atualizar o carrinho
                 } else {
                     console.error('Falha ao remover todos os itens.');
                 }
@@ -57,40 +57,35 @@
         }
 
         /**
-         * Função para finalizar a compra
+         * Função para finalizar a compra.
          */
         async function finalizarCompra() {
-    try {
-        const response = await fetch('/cart/buy', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+            try {
+                const response = await fetch('/cart/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // Regista a resposta para verificar se é HTML ou JSON
+                const responseText = await response.text();
+                console.log('Texto da resposta:', responseText);
+
+                // Tenta analisar a resposta como JSON
+                const data = JSON.parse(responseText);
+
+                if (data.status === 'error') {
+                    alert(`Erro: ${data.message}`); // Mostra erro caso a compra falhe
+                } else if (data.status === 'success') {
+                    alert(data.message); // Mostra mensagem de sucesso
+                    window.location.href = '/'; // Redireciona após sucesso
+                }
+            } catch (error) {
+                console.error('Erro inesperado:', error);
+                alert("Ocorreu um erro ao finalizar a compra.");
             }
-        });
-
-        // Log the full response to see if it's HTML or JSON
-        const responseText = await response.text();
-        console.log('Response text:', responseText);
-
-        // Try parsing the response as JSON
-        const data = JSON.parse(responseText);
-
-        if (data.status === 'error') {
-            alert(`Erro: ${data.message}`);
-        } else if (data.status === 'success') {
-            alert(data.message);  
-            window.location.href = '/';  // Redirect after success
         }
-    } catch (error) {
-        console.error('Erro inesperado:', error);
-        alert("Ocorreu um erro ao finalizar a compra.");
-    }
-}
-
-
-
-
-
     </script>
 </head>
 
@@ -114,13 +109,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                            $totalCarrinho = 0; // Variável para somar o total do carrinho
-                            foreach ($_SESSION['cart'] as $product_id => $item): 
-                                $precoComDesconto = $item['price_with_discount'];
-                                $quantidade = $item['quantity'];
-                                $totalItem = $precoComDesconto * $quantidade; // Calcular o total do item
-                                $totalCarrinho += $totalItem; // Adicionar ao total do carrinho
+                        <?php
+                        $totalCarrinho = 0; // Variável para somar o total do carrinho
+                        foreach ($_SESSION['cart'] as $product_id => $item):
+                            $precoComDesconto = $item['price_with_discount'];
+                            $quantidade = $item['quantity'];
+                            $totalItem = $precoComDesconto * $quantidade; // Calcular o total do item
+                            $totalCarrinho += $totalItem; // Adicionar ao total do carrinho
                         ?>
                             <tr>
                                 <!-- Imagem do Produto -->

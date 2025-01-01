@@ -1,6 +1,6 @@
 <?php
 
-require_once './app/controllers/bannerController.php'; // Include the BannerController
+require_once './app/controllers/bannerController.php'; // Incluir o controlador de Banners
 require_once './app/models/homeModel.php';
 
 class HomePageController
@@ -9,21 +9,28 @@ class HomePageController
 
     public function __construct()
     {
+        // Inicializar o controlador de Banners
         $this->bannerController = new BannerController();
     }
 
+    /**
+     * Exibir a página inicial.
+     */
     public function index(): void
     {
+        // Criar uma instância do modelo HomeModel para interagir com os dados da página inicial
         $homeModel = new HomeModel();
+
+        // Obter os produtos com desconto para exibir na página inicial
         $produtosComDesconto = $homeModel->getProdutosComDesconto();
 
-        // Fetch the banners using the BannerController
+        // Obter os banners utilizando o BannerController
         $banners = $this->bannerController->getBanners();
-        
-        // Get the current banner index
+
+        // Determinar o índice atual do banner para exibição
         $currentBannerIndex = $this->bannerController->getCurrentBannerIndex(0);
 
-        // Pass the banners and current banner index to the view
+        // Passar os produtos, banners e o índice atual do banner para a vista
         require_once './app/views/homepage.php';
     }
 }

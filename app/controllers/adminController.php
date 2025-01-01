@@ -4,54 +4,54 @@ require_once './app/database/Connection.php';
 
 class AdminController
 {
-
+    // Método para exibir a página inicial de administração
     public function index()
     {
         require_once './app/views/adminView.php';
     }
 
+    // Método para criar um novo produto
     public function create()
     {
-        $error = null;
-        $success = null;
+        $error = null; // Variável para armazenar mensagens de erro
+        $success = null; // Variável para armazenar mensagens de sucesso
 
         try {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $conn = Connection::getInstance();
 
-                // Capture form inputs
+                // Captura dos dados enviados no formulário
                 $nome = $_POST['nome'] ?? null;
                 $descricao = $_POST['descricao'] ?? null;
                 $preco = $_POST['preco'] ?? null;
                 $discount_price = $_POST['discount_price'] ?? null;
                 $categoria_id = $_POST['categoria_id'] ?? null;
                 $desconto = $_POST['desconto'] ?? null;
-                $imagem_url = $_POST['imagem_url'] ?? null;  // Agora estamos capturando a URL da imagem
+                $imagem_url = $_POST['imagem_url'] ?? null; // Captura da URL da imagem
 
-                // Validate required fields
+                // Validação dos campos obrigatórios
                 if (!$nome || !$preco || !$categoria_id) {
                     $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
                 } else {
-                    // Validar a URL da imagem
+                    // Validação da URL da imagem
                     if (!filter_var($imagem_url, FILTER_VALIDATE_URL)) {
                         $error = "A URL da imagem fornecida não é válida.";
                     }
 
-                    // If no errors, find the next available ID
+                    // Se não houver erros, encontrar o próximo ID disponível
                     if (!$error) {
-                        // Query to find the next available ID
                         $sql = "SELECT MIN(t1.id + 1) AS next_id 
-                            FROM produtos t1 
-                            WHERE NOT EXISTS (SELECT t2.id FROM produtos t2 WHERE t2.id = t1.id + 1)";
+                                FROM produtos t1 
+                                WHERE NOT EXISTS (SELECT t2.id FROM produtos t2 WHERE t2.id = t1.id + 1)";
                         $stmt = $conn->query($sql);
                         $nextId = $stmt->fetchColumn();
 
-                        // Fallback: if the table is empty, use 1
+                        // Caso a tabela esteja vazia, o próximo ID será 1
                         $nextId = $nextId ?: 1;
 
-                        // Insert product data into the database, including the stock value set to 0
+                        // Inserção dos dados do produto na base de dados
                         $sql = "INSERT INTO produtos (id, nome, descricao, preco, discount_price, categoria_id, imagem, desconto, stock) 
-                            VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto, :stock)";
+                                VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto, :stock)";
 
                         $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':id', $nextId);
@@ -60,10 +60,10 @@ class AdminController
                         $stmt->bindParam(':preco', $preco);
                         $stmt->bindParam(':discount_price', $discount_price);
                         $stmt->bindParam(':categoria_id', $categoria_id);
-                        $stmt->bindParam(':imagem', $imagem_url);  // Salvando a URL da imagem no banco de dados
+                        $stmt->bindParam(':imagem', $imagem_url); // Guarda a URL da imagem
                         $stmt->bindParam(':desconto', $desconto);
 
-                        // Set stock to 0
+                        // Define o stock como 0
                         $stock = 0;
                         $stmt->bindParam(':stock', $stock);
 
@@ -79,17 +79,16 @@ class AdminController
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
 
-        // Include the view with feedback
+        // Incluir a vista com mensagens de feedback
         require_once './app/views/createProdutosView.php';
     }
 
-
-
+    // Método para listar os produtos editáveis
     public function editList()
     {
         try {
             $conn = Connection::getInstance();
-            $search = $_GET['search'] ?? '';
+            $search = $_GET['search'] ?? ''; // Parâmetro de pesquisa
 
             $sql = "SELECT id, nome, preco, stock FROM produtos WHERE nome LIKE :search";
             $stmt = $conn->prepare($sql);
@@ -101,20 +100,20 @@ class AdminController
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
 
+        // Incluir a vista para listar os produtos
         require_once './app/views/editListView.php';
     }
 
-
+    // Método para exibir o formulário de edição de um produto
     public function editForm($id)
     {
-        $error = null;
-        $success = null;
+        $error = null; // Mensagem de erro
+        $success = null; // Mensagem de sucesso
 
         try {
             $conn = Connection::getInstance();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
                 // Captura dos dados do formulário
                 $nome = $_POST['nome'] ?? null;
                 $descricao = $_POST['descricao'] ?? null;
@@ -122,14 +121,14 @@ class AdminController
                 $discount_price = $_POST['discount_price'] ?? null;
                 $categoria_id = $_POST['categoria_id'] ?? null;
                 $desconto = $_POST['desconto'] ?? null;
-                $imagem_url = $_POST['imagem_url'] ?? null;  // URL da imagem se fornecida
-                $imagem_nova = $_FILES['imagem'] ?? null;    // Caso o usuário envie um arquivo
+                $imagem_url = $_POST['imagem_url'] ?? null; // URL da imagem
+                $imagem_nova = $_FILES['imagem'] ?? null;  // Imagem enviada pelo utilizador
 
                 // Validar campos obrigatórios
                 if (!$nome || !$preco || !$categoria_id) {
                     $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
                 } else {
-                    // Recupera o produto original
+                    // Obter os detalhes do produto original
                     $sql = "SELECT imagem FROM produtos WHERE id = :id";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindParam(':id', $id);
@@ -138,39 +137,35 @@ class AdminController
 
                     $imagem_atual = $produto['imagem'];
 
-                    // Verificar se imagem foi enviada via URL ou upload
+                    // Processar upload ou URL da imagem
                     if ($imagem_nova && $imagem_nova['error'] === UPLOAD_ERR_OK) {
-                        // Se o usuário enviou uma nova imagem, devemos fazer upload
                         $uploadDirs = [
-                            1 => 'peixes/',      // Categoria 1 -> Peixes
-                            2 => 'carnes/',      // Categoria 2 -> Carnes
-                            3 => 'frutas/',      // Categoria 3 -> Frutas
-                            4 => 'sumos/',       // Categoria 4 -> Sumos
-                            5 => 'eletrodomesticos/', // Categoria 5 -> Eletrodomésticos
-                            6 => 'brinquedos/',  // Categoria 6 -> Brinquedos
-                            7 => 'doces/',       // Categoria 7 -> Doces
-                            8 => 'higiene/',     // Categoria 8 -> Higiene
-                            9 => 'congelados/',  // Categoria 9 -> Congelados
-                            10 => 'pastelaria/', // Categoria 10 -> Pastelaria
+                            1 => 'peixes/',
+                            2 => 'carnes/',
+                            3 => 'frutas/',
+                            4 => 'sumos/',
+                            5 => 'eletrodomesticos/',
+                            6 => 'brinquedos/',
+                            7 => 'doces/',
+                            8 => 'higiene/',
+                            9 => 'congelados/',
+                            10 => 'pastelaria/',
                         ];
 
-                        // Verificar se a categoria existe no array de diretórios
                         if (isset($uploadDirs[$categoria_id])) {
                             $uploadDir = $uploadDirs[$categoria_id];
                             if (!is_dir($uploadDir)) {
-                                mkdir($uploadDir, 0777, true);  // Cria o diretório caso não exista
+                                mkdir($uploadDir, 0777, true);
                             }
 
                             $targetFile = $uploadDir . basename($imagem_nova['name']);
 
-                            // Apagar a imagem antiga se necessário
                             if (!empty($imagem_atual) && file_exists($imagem_atual)) {
-                                unlink($imagem_atual);  // Remove a imagem antiga
+                                unlink($imagem_atual); // Remove a imagem antiga
                             }
 
-                            // Mover o arquivo carregado para o diretório
                             if (move_uploaded_file($imagem_nova['tmp_name'], $targetFile)) {
-                                $imagem_atual = $targetFile;  // Atualiza o caminho da imagem
+                                $imagem_atual = $targetFile;
                             } else {
                                 $error = "Erro ao fazer upload da nova imagem.";
                             }
@@ -178,20 +173,16 @@ class AdminController
                             $error = "Categoria inválida.";
                         }
                     } elseif ($imagem_url && filter_var($imagem_url, FILTER_VALIDATE_URL)) {
-                        // Se a URL da imagem foi fornecida e é válida
                         $imagem_atual = $imagem_url;
-                    } else {
-                        // Se não for nem URL nem arquivo, manter a imagem antiga
-                        $imagem_atual = $imagem_atual;
                     }
 
                     // Atualizar os dados do produto
                     if (!$error) {
                         $sql = "UPDATE produtos 
-                            SET nome = :nome, descricao = :descricao, preco = :preco, 
-                                discount_price = :discount_price, categoria_id = :categoria_id, 
-                                desconto = :desconto, imagem = :imagem 
-                            WHERE id = :id";
+                                SET nome = :nome, descricao = :descricao, preco = :preco, 
+                                    discount_price = :discount_price, categoria_id = :categoria_id, 
+                                    desconto = :desconto, imagem = :imagem 
+                                WHERE id = :id";
 
                         $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':nome', $nome);
@@ -212,14 +203,14 @@ class AdminController
                 }
             }
 
-            // Obter os detalhes do produto para preencher o formulário
+            // Obter os detalhes do produto
             $sql = "SELECT * FROM produtos WHERE id = :id";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             $produto = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Obter as categorias dinâmicas da base de dados
+            // Obter categorias disponíveis
             $sqlCategorias = "SELECT id, nome FROM categorias ORDER BY nome";
             $stmtCategorias = $conn->query($sqlCategorias);
             $categorias = $stmtCategorias->fetchAll(PDO::FETCH_ASSOC);
@@ -227,10 +218,11 @@ class AdminController
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
 
+        // Incluir a vista de formulário de edição
         require_once './app/views/editFormView.php';
     }
 
-
+    // Método para eliminar um produto
     public function delete($id)
     {
         $error = null;
@@ -239,7 +231,7 @@ class AdminController
         try {
             $conn = Connection::getInstance();
 
-            // Fetch the product to delete its image if needed
+            // Obter detalhes do produto para apagar a imagem associada
             $sql = "SELECT imagem FROM produtos WHERE id = :id";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id', $id);
@@ -247,12 +239,12 @@ class AdminController
             $produto = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($produto) {
-                // Delete the product's image file
+                // Apagar o ficheiro de imagem
                 if (!empty($produto['imagem']) && file_exists($produto['imagem'])) {
                     unlink($produto['imagem']);
                 }
 
-                // Delete the product from the database
+                // Eliminar o produto da base de dados
                 $sql = "DELETE FROM produtos WHERE id = :id";
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':id', $id);
@@ -269,9 +261,8 @@ class AdminController
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
 
-        // Redirect back to the product list with feedback
+        // Redirecionar para a lista de produtos com feedback
         header("Location: /produtos/edit?success=" . urlencode($success) . "&error=" . urlencode($error));
         exit;
     }
-    
 }

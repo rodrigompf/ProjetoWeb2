@@ -6,32 +6,39 @@ class BannerController
 {
     private $homeModel;
 
+    // Construtor para inicializar o modelo da página inicial
     public function __construct()
     {
         $this->homeModel = new HomeModel();
     }
 
-    // Fetch banners and display them to the view
+    // Obtém todos os banners do modelo
     public function getBanners(): array
     {
-        return $this->homeModel->getBanners(); // Get banners from the model
+        // Recupera os banners a partir do modelo
+        return $this->homeModel->getBanners();
     }
 
-    // Fetch a single banner image (if needed for the view)
+    // Obtém o índice atual do banner, com validação
     public function getCurrentBannerIndex($currentIndex): int
     {
+        // Obtemos a lista de banners
         $banners = $this->getBanners();
+
+        // Verifica se existe um índice de banner passado via query string; caso contrário, usa o índice atual
         $currentIndex = isset($_GET['banner']) ? (int)$_GET['banner'] : $currentIndex;
 
-        // Ensure the current index is valid
+        // Garante que o índice atual é válido (dentro dos limites do array de banners)
         return max(0, min($currentIndex, count($banners) - 1));
     }
 
-    // Pass the banners to the view
+    // Renderiza os banners e passa os dados para a vista
     public function renderBanners()
     {
+        // Obtém a lista de banners
         $banners = $this->getBanners();
-        // Assuming you will pass $banners to the view file (HTML)
-        include './app/views/bannerView.php'; // Update the view to display banners
+
+        // Inclui a vista correspondente para exibir os banners
+        include './app/views/bannerView.php';
     }
 }
