@@ -120,4 +120,31 @@ return [
         'controller' => 'CartController', // Controlador para detalhes de uma compra no histórico
         'action' => 'details' // Ação para exibir detalhes de uma compra específica
     ],
+
+    // Banners
+'banners' => [
+    'controller' => 'BannersController', // Controlador para gerir banners
+    'action' => 'index' // Ação para listar todos os banners
+],
+'banners/create' => [
+    'controller' => 'BannersController', // Controlador para criar um novo banner
+    'action' => 'create' // Ação para adicionar um novo banner
+],
+'banners/store' => [
+    'controller' => 'BannersController', // Controlador para armazenar o novo banner
+    'action' => 'store' // Ação para salvar o banner na base de dados
+],
+'banners/edit/{id}' => [
+    'controller' => 'BannersController', // Controlador para editar um banner específico
+    'action' => 'edit' // Ação para editar um banner
+],
+'banners/update/{id}' => [
+    'controller' => 'BannersController', // Controlador para atualizar um banner
+    'action' => 'update' // Ação para atualizar os dados do banner
+],
+'banners/delete/{id}' => [
+    'controller' => 'BannersController', // Controlador para eliminar um banner
+    'action' => 'delete' // Ação para excluir o banner
+],
+
 ];

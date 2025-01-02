@@ -42,6 +42,12 @@
             class="px-4 py-2 bg-orange-500 text-white font-semibold rounded shadow hover:bg-orange-600 transition">
             Gestão de Stock
         </a>
+         <!-- Botão para gestão Banners -->
+         <a href="/banners"
+                class="px-4 py-2 bg-red-500 text-white font-semibold rounded shadow hover:bg-red-600 transition"
+                aria-label="Gestão de Banners">
+                Gestão de Banners
+            </a>
     </div>
 
 </body>

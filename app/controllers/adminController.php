@@ -265,4 +265,5 @@ class AdminController
         header("Location: /produtos/edit?success=" . urlencode($success) . "&error=" . urlencode($error));
         exit;
     }
+    
 }
