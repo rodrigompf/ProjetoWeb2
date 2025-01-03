@@ -15,14 +15,12 @@ Cesta24 é uma plataforma inovadora de supermercado online, desenvolvida para pr
   - E muito mais!
 
 - **Busca Avançada**  
-  Pesquisa por nome, marca ou categoria de produto.
+  Pesquisa por nome, promoções ou categoria de produto.
 
 - **Filtros**  
   Permite filtrar produtos por:
-  - Preço
-  - Marcas
+  - Categorias
   - Promoções
-  - Produtos orgânicos ou dietéticos
 
 ## Fluxo de Navegação
 
@@ -35,11 +33,44 @@ Permite que os usuários acessem suas contas ou se cadastrem para iniciar as com
 ### 3. Lista de Produtos
 Exibe os produtos disponíveis, organizados por tópicos, com opções de seleção personalizada.
 
-### 4. Adicionar Produtos (Administrador)
+### 4. Lista de Descontos
+Exibe os produtos disponíveis, organizados por tópicos, com opções de seleção personalizada.
+
+### 5. Cesta de Compras
+Exibe os produtos disponíveis, organizados por tópicos, com opções de seleção personalizada.
+
+### 6. Histórico de Compras
+Exibe os produtos disponíveis, organizados por tópicos, com opções de seleção personalizada.
+
+### 7. Adicionar Produtos (Administrador)
 Permite ao administrador adicionar novos produtos ao catálogo.
 
-### 5. Editar Produtos (Administrador)
+### 8. Editar Produtos (Administrador)
 Facilita a atualização das informações de produtos existentes no catálogo.
+
+### 9. Eliminar Produtos (Administrador)
+Permite ao administrador Eliminar produtos do catálogo.
+
+### 10. Adicionar Categorias (Administrador)
+Permite ao administrador adicionar novas Categorias.
+
+### 11. Editar Categorias (Administrador)
+Facilita a atualização das informações de Categorias existentes.
+
+### 12. Eliminar Categorias (Administrador)
+Permite ao administrador remover Categorias.
+
+### 13. Adicionar Banners (Administrador)
+Permite ao administrador adicionar novos Banners.
+
+### 14. Editar Banners (Administrador)
+Facilita a atualização das informações de Banners existentes no catálogo.
+
+### 15. Eliminar Banners (Administrador)
+Permite ao administrador remover Banners.
+
+### 16. Adicionar Stock (Administrador)
+Permite ao administrador gerir o stock dos produtos do catálogo.
 
 ![Modelo Entidade-Relacionamento](image.png)
 
