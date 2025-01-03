@@ -1,30 +1,55 @@
-O Cesta24 é uma inovadora plataforma de supermercado online, projetada para oferecer conveniência, praticidade e economia de tempo aos seus utilizadores. Através deste serviço, os clientes podem realizar suas compras de supermercado diretamente pela internet, sem a necessidade de sair de casa.
+# Cesta24 - Supermercado Online
 
+Cesta24 é uma plataforma inovadora de supermercado online, desenvolvida para proporcionar conveniência, praticidade e economia de tempo aos seus usuários. Com este serviço, os clientes podem realizar suas compras de supermercado diretamente pela internet, sem sair de casa.
 
-Funcionalidades
+## Funcionalidades
 
-Classificação por categorias: Alimentos frescos, congelados, mercearia, produtos de limpeza, higiene pessoal, bebidas, e mais.
+- **Classificação por Categorias**  
+  Produtos organizados em diversas categorias, incluindo:
+  - Alimentos frescos
+  - Congelados
+  - Mercearia
+  - Produtos de limpeza
+  - Higiene pessoal
+  - Bebidas
+  - E muito mais!
 
-Busca avançada: Permite pesquisar produtos por nome, marca, ou categoria.
+- **Busca Avançada**  
+  Pesquisa por nome, marca ou categoria de produto.
 
-Filtros: Filtre por preço, marcas, promoções, e produtos orgânicos ou dietéticos.
+- **Filtros**  
+  Permite filtrar produtos por:
+  - Preço
+  - Marcas
+  - Promoções
+  - Produtos orgânicos ou dietéticos
 
+## Fluxo de Navegação
 
-Fluxo de navegação
+### 1. Homepage
+Apresenta a plataforma, destaca funcionalidades e convida o usuário a começar suas compras.
 
-Homepage: Apresentar a plataforma, destacar funcionalidades e convidar o utilizador a começar.
+### 2. Login/Registro
+Permite que os usuários acessem suas contas ou se cadastrem para iniciar as compras.
 
-Login/Register:Permitir que os utilizadores acessem suas contas ou se cadastrem para começar a comprar.
+### 3. Lista de Produtos
+Exibe os produtos disponíveis, organizados por tópicos, com opções de seleção personalizada.
 
-Lista Produtos: Apresentar os produtos disponíveis de forma organizada por tópicos, permitindo a seleção personalizada.
+### 4. Adicionar Produtos (Administrador)
+Permite ao administrador adicionar novos produtos ao catálogo.
 
-Adcionar Produtos(administador):Permitir que o administrador insira novos produtos no catálogo.
+### 5. Editar Produtos (Administrador)
+Facilita a atualização das informações de produtos existentes no catálogo.
 
-Editar Produtos(administrador): Atualizar informações de produtos existentes no catálogo.
+![Modelo Entidade-Relacionamento](image.png)
 
+## Perfis de Usuários
 
-Perfil dos Utilizadores
+- **Usuário (Cliente)**  
+  Permite que os clientes façam compras de forma fácil e personalizada.
 
-Utilizador(Cliente):Permitir que os clientes façam compras de forma fácil e personalizada.
+- **Administrador**  
+  Gerencia o sistema e garante o funcionamento eficiente da plataforma.
 
-Administrador:Gerir o sistema e garantir o funcionamento eficiente da plataforma.
+## Link Website
+**Brevemente**
