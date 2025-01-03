@@ -10,7 +10,7 @@
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded shadow-md w-96">
-    <a href="javascript:history.back()"
+        <a href="javascript:history.back()"
             class="absolute top-8 left-8 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">
             Voltar
         </a>
@@ -26,6 +26,9 @@
 
             <label class="block mt-4 mb-2 font-semibold" for="image_url">URL da Imagem</label>
             <input type="text" name="image_url" id="image_url" class="w-full p-2 border rounded" required>
+
+            <!-- Token CSRF -->
+            <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
             <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition">
                 Adicionar

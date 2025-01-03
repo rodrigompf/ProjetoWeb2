@@ -26,8 +26,8 @@
 <body class="bg-gray-100 flex flex-col items-center min-h-screen p-4">
 
     <!-- Botão para voltar à página anterior -->
-    <a href="javascript:history.back()" 
-       class="mb-4 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">
+    <a href="javascript:history.back()"
+        class="mb-4 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">
         Voltar
     </a>
 
@@ -76,7 +76,7 @@
                             <td class="border border-gray-300 px-4 py-2">
                                 <!-- Botão para abrir o modal e adicionar stock -->
                                 <button onclick="showModal('<?= $produto['id'] ?>', '<?= $produto['stock'] ?>')"
-                                        class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition">
+                                    class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition">
                                     Adicionar Stock
                                 </button>
                             </td>
@@ -101,15 +101,17 @@
                 <label for="newStock" class="block text-lg font-semibold mt-4">Nova quantidade de stock:</label>
                 <!-- Campo para inserir a nova quantidade de stock -->
                 <input type="number" name="new_stock" id="newStock" class="block w-full p-3 border rounded mb-6" required>
+                <!-- Token CSRF -->
+                <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
                 <div class="flex justify-between">
                     <!-- Botão para fechar o modal -->
-                    <button type="button" onclick="hideModal()" 
-                            class="px-4 py-2 bg-gray-500 text-white rounded shadow hover:bg-gray-600 transition">
+                    <button type="button" onclick="hideModal()"
+                        class="px-4 py-2 bg-gray-500 text-white rounded shadow hover:bg-gray-600 transition">
                         Voltar
                     </button>
                     <!-- Botão para submeter o formulário de adicionar stock -->
-                    <button type="submit" 
-                            class="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition">
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition">
                         Confirmar
                     </button>
                 </div>
@@ -118,4 +120,5 @@
     </div>
 
 </body>
+
 </html>

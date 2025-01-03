@@ -96,6 +96,9 @@
                 <p class="text-sm text-gray-500 mt-2">Insira a URL de uma nova imagem para substituir a atual.</p>
             </div>
 
+            <!-- Token CSRF -->
+            <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
+
             <!-- Botão para submeter as alterações -->
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Salvar Alterações

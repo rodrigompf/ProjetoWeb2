@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Inicia a sessão
+}
 
 // Verifica se a variável $produtosComDesconto está definida
 if (!isset($produtosComDesconto)) {

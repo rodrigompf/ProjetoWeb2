@@ -44,6 +44,9 @@ if (session_status() === PHP_SESSION_NONE) {
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600" required>
                 </div>
 
+                <!-- Token CSRF -->
+                <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
+
                 <!-- Botão para enviar o formulário de login -->
                 <button type="submit"
                     class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">

@@ -1,5 +1,7 @@
 <?php
-session_start(); // Inicia a sessão para garantir o acesso a variáveis de sessão
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Inicia a sessão
+}
 $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verifica se o utilizador está autenticado e se é administrador
 ?>
 

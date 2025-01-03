@@ -95,6 +95,9 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="url" name="imagem_url" id="imagem_url" class="w-full px-4 py-2 rounded border" placeholder="Cole o URL da imagem aqui">
             </div>
 
+            <!-- Token CSRF -->
+            <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
+
             <!-- Botão de Submissão para salvar o produto -->
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Salvar Produto
