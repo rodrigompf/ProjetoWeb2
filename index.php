@@ -1,11 +1,5 @@
 <?php
 
-// Forçar HTTPS
-if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
-    header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-    exit();
-}
-
 // Configurar cabeçalhos de segurança
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: SAMEORIGIN");
