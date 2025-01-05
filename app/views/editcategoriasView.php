@@ -26,6 +26,9 @@
 
         <!-- Formulário para editar a categoria -->
         <form method="POST">
+
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
             <!-- Campo para editar o nome da categoria -->
             <label class="block mb-2 font-semibold" for="nome">Nome</label>
             <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($categoria['nome']) ?>" class="w-full p-2 border rounded" required>

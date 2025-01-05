@@ -130,7 +130,7 @@ $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['admin'] == 1; // Verif
                     <?php if ($isAdmin): ?>
                         <div class="text-center mt-4">
                             <a href="adminZone" class="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transform transition-transform hover:bg-green-700 focus:outline-none">
-                                Adicionar Novo Produto
+                                ZONA ADMIN
                             </a>
                         </div>
                     <?php endif; ?>

@@ -45,6 +45,9 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Formulário para Adicionar Produto -->
         <form action="" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md">
+
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
             <!-- Nome do Produto -->
             <div class="mb-4">
                 <label for="nome" class="block text-gray-700 font-semibold mb-2">Nome</label>

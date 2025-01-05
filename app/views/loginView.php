@@ -30,6 +30,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <!-- Formulário de login -->
             <form method="POST" action="/login" class="space-y-4">
+
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
                 <!-- Campo para o email do utilizador -->
                 <div>
                     <label for="email" class="block text-gray-700">Email</label>

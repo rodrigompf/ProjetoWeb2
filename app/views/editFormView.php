@@ -32,6 +32,9 @@
 
         <!-- Formulário para editar o produto -->
         <form method="POST" class="bg-white p-8 rounded shadow-md">
+
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
             <!-- Campo para editar o nome do produto -->
             <div class="mb-4">
                 <label for="nome" class="block text-gray-700 font-semibold mb-2">Nome</label>

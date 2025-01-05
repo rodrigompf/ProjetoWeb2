@@ -20,6 +20,9 @@
 
             <!-- Formulário de cadastro -->
             <form method="POST" action="/register" class="space-y-4">
+
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
                 <!-- Campo para o nome de usuário -->
                 <div>
                     <label for="username" class="block text-gray-700">Usuário</label>

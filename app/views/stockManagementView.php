@@ -101,6 +101,9 @@
                 <label for="newStock" class="block text-lg font-semibold mt-4">Nova quantidade de stock:</label>
                 <!-- Campo para inserir a nova quantidade de stock -->
                 <input type="number" name="new_stock" id="newStock" class="block w-full p-3 border rounded mb-6" required>
+                
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
                 <div class="flex justify-between">
                     <!-- Botão para fechar o modal -->
                     <button type="button" onclick="hideModal()"

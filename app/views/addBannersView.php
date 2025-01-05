@@ -21,6 +21,9 @@
         <?php endif; ?>
 
         <form method="POST">
+
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
             <label class="block mb-2 font-semibold" for="name">Nome</label>
             <input type="text" name="name" id="name" class="w-full p-2 border rounded" required>
 
