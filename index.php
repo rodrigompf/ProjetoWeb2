@@ -29,13 +29,13 @@ function validateCsrfToken($token)
     }
 }
 
-// Get current URI and sanitize it
+// Obter URI e sanitizar
 $route = filter_var(trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'), FILTER_SANITIZE_URL);
 
-// Load routes from configuration
+// Busca das routes
 $routes = require_once './app/config/routes.php';
 
-// Match static or dynamic routes
+// rotas dinamicas e estaticas
 if (array_key_exists($route, $routes)) {
     // Static route handling
     $controllerName = basename($routes[$route]['controller']);
@@ -56,7 +56,7 @@ if (array_key_exists($route, $routes)) {
         echo "Controller not found.";
     }
 } else {
-    // Check dynamic routes
+    // verificar rotas dinamicas
     foreach ($routes as $pattern => $routeInfo) {
         $patternRegex = preg_replace('/\{[a-zA-Z0-9_]+\}/', '([^/]+)', $pattern);
         $patternRegex = str_replace('/', '\/', $patternRegex);
@@ -85,7 +85,7 @@ if (array_key_exists($route, $routes)) {
         }
     }
 
-    // If no route matches, return 404
+    // se não há route, erro 404
     http_response_code(404);
     echo "Page not found.";
 }
