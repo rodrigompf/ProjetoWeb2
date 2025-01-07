@@ -29,6 +29,20 @@ function validateCsrfToken($token)
     }
 }
 
+// Serve the favicon.ico directly
+if ($_SERVER['REQUEST_URI'] === '/favicon.ico') {
+    $faviconPath = './favicon.ico'; // Path to the favicon file
+    if (file_exists($faviconPath)) {
+        header('Content-Type: image/x-icon');
+        readfile($faviconPath);
+        exit;
+    } else {
+        http_response_code(404);
+        echo "Favicon not found.";
+        exit;
+    }
+}
+
 // Obter URI e sanitizar
 $route = filter_var(trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'), FILTER_SANITIZE_URL);
 
@@ -89,6 +103,7 @@ if (array_key_exists($route, $routes)) {
     http_response_code(404);
     echo "Page not found.";
 }
+
 // Função erros
 function logError($message)
 {
