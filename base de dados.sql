@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 31-Dez-2024 às 10:28
+-- Tempo de geração: 08-Jan-2025 às 23:01
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `banners` (
   `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `image_url` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -36,11 +37,11 @@ CREATE TABLE `banners` (
 -- Extraindo dados da tabela `banners`
 --
 
-INSERT INTO `banners` (`id`, `image_url`) VALUES
-(1, 'https://passageirodeprimeira.b-cdn.net/wp-content/uploads/2023/04/ganhe-30-de-desconto-ao-fazer-o-seu-mercado-no-supermercado-justo-whatsapp-image-2023-04-17-at-18.39.03.jpeg'),
-(2, 'https://redeuniaosupermercados.com.br/wp-content/uploads/2019/12/banner-campanha-1.jpg'),
-(3, 'https://www.designi.com.br/images/preview/12456595-m.jpg'),
-(4, 'https://www.designi.com.br/images/preview/13123515-m.jpg');
+INSERT INTO `banners` (`id`, `name`, `image_url`) VALUES
+(1, 'Green', 'https://passageirodeprimeira.b-cdn.net/wp-content/uploads/2023/04/ganhe-30-de-desconto-ao-fazer-o-seu-mercado-no-supermercado-justo-whatsapp-image-2023-04-17-at-18.39.03.jpeg'),
+(2, 'Campanha', 'https://redeuniaosupermercados.com.br/wp-content/uploads/2019/12/banner-campanha-1.jpg'),
+(3, 'Copão', 'https://www.designi.com.br/images/preview/12456595-m.jpg'),
+(4, 'sdsd', 'https://www.designi.com.br/images/preview/13123515-m.jpg');
 
 -- --------------------------------------------------------
 
