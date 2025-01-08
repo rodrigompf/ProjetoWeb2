@@ -31,6 +31,6 @@ class HomePageController
         $currentBannerIndex = $this->bannerController->getCurrentBannerIndex(0);
 
         // Passar os produtos, banners e o índice atual do banner para a vista
-        require_once './app/views/homepage.php';
+        require_once './app/views/homepage/homepage.php';
     }
 }

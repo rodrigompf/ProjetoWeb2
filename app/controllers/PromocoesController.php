@@ -16,7 +16,7 @@ class PromocoesController
         $produtosComDesconto = $homeModel->getProdutosComDesconto();
 
         // Disponibiliza os dados (produtos com desconto) para a view
-        require_once './app/views/todasPromocoes.php';
+        require_once './app/views/produtos/todasPromocoes.php';
     }
 }
 ?>

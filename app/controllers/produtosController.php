@@ -18,7 +18,7 @@ class ProdutosController
         $categorias = $produtosModel->getAllCategorias();
 
         // Incluir a vista para exibir os produtos
-        require_once './app/views/produtosView.php';
+        require_once './app/views/produtos/produtosView.php';
     }
 
     /**
@@ -27,7 +27,7 @@ class ProdutosController
     public function create(): void
     {
         // Incluir a vista de criação de produto
-        require_once '../app/views/createProdutosView.php';
+        require_once '../app/views/produtos/createProdutosView.php';
     }
 
     /**
@@ -72,7 +72,7 @@ class ProdutosController
         $produtosView = $produtosModel->getProdutosByCategoria($categoria);
 
         // Exibe a vista de produtos filtrados pela categoria
-        require_once './app/views/categoriaView.php';
+        require_once './app/views/categorias/categoriaView.php';
     }
 
     /**

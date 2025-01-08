@@ -19,10 +19,12 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal img {
             max-width: 90%;
             max-height: 90%;
         }
+
         .modal.active {
             display: flex;
         }
@@ -31,7 +33,7 @@
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded shadow-md w-96">
-    <a href="javascript:history.back()"
+        <a href="javascript:history.back()"
             class="absolute top-8 left-8 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">
             Voltar
         </a>
@@ -53,7 +55,7 @@
                         <a href="#" class="open-modal" data-image="<?= htmlspecialchars($banner['image_url']) ?>">
                             <img src="<?= htmlspecialchars($banner['image_url']) ?>" alt="Banner" class="w-16 h-16 object-cover rounded">
                         </a>
-                        
+
                         <div>
                             <p><strong><?= htmlspecialchars($banner['name']) ?></strong></p>
                         </div>
@@ -83,7 +85,7 @@
         // Get the modal and image element
         const modal = document.getElementById('modal');
         const modalImage = document.getElementById('modal-image');
-        
+
         // Get all elements with class 'open-modal' (clickable images)
         const openModalLinks = document.querySelectorAll('.open-modal');
 

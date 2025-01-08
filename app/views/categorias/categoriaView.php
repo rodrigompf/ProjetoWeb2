@@ -89,7 +89,7 @@ if (session_status() == PHP_SESSION_NONE) {
 </head>
 
 <body class="bg-gray-100">
-    <?php include './app/views/header.php'; ?>
+    <?php include './app/views/homepage/header.php'; ?>
 
     <div class="container mx-auto py-10">
         <!-- Título da página com a categoria -->

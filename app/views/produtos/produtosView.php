@@ -16,7 +16,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 <body class="bg-gray-100">
     <!-- Cabeçalho da página -->
-    <?php include './app/views/header.php'; ?>
+    <?php include './app/views/homepage/header.php'; ?>
 
     <!-- Conteúdo principal da página -->
     <div class="container mx-auto py-10">

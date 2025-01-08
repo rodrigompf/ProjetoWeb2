@@ -21,7 +21,7 @@ class CategoriasController
         }
 
         // Incluir a vista para exibir as categorias
-        require_once './app/views/categoriasView.php';
+        require_once './app/views/categorias/categoriasView.php';
     }
 
     // Adicionar uma nova categoria
@@ -61,7 +61,7 @@ class CategoriasController
         }
 
         // Incluir a vista para adicionar uma nova categoria
-        require_once './app/views/addcategoriasView.php';
+        require_once './app/views/categorias/addcategoriasView.php';
     }
 
     // Eliminar uma categoria
@@ -142,6 +142,6 @@ class CategoriasController
         }
 
         // Incluir a vista para editar a categoria
-        require_once './app/views/editcategoriasView.php';
+        require_once './app/views/categorias/editcategoriasView.php';
     }
 }

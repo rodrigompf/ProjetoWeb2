@@ -40,7 +40,7 @@ class CartController
         }
 
         // Exibir a vista do carrinho
-        require_once __DIR__ . '/../views/cartView.php';
+        require_once __DIR__ . '/../views/carrinho/cartView.php';
     }
 
     // Exibir os detalhes de uma compra
@@ -68,7 +68,7 @@ class CartController
             }
 
             // Exibir os detalhes da compra
-            require_once __DIR__ . '/../views/purchaseDetailsView.php';
+            require_once __DIR__ . '/../views/carrinho/purchaseDetailsView.php';
         } catch (Exception $e) {
             // Caso ocorra um erro ao carregar os detalhes
             echo "Erro ao carregar os detalhes: " . $e->getMessage();
@@ -272,7 +272,7 @@ class CartController
             }
 
             // Exibir o histórico de compras
-            require_once __DIR__ . '/../views/historyView.php';
+            require_once __DIR__ . '/../views/carrinho/historyView.php';
         } catch (Exception $e) {
             // Caso ocorra erro ao carregar o histórico
             echo "Erro ao carregar o histórico: " . $e->getMessage();

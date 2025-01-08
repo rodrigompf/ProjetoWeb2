@@ -34,7 +34,7 @@ class AuthController
         }
 
         // Inclui a vista para o formulário de registo
-        require_once './app/views/registerView.php';
+        require_once './app/views/loginRegist/registerView.php';
     }
 
     // Método para autenticar um utilizador
@@ -65,7 +65,7 @@ class AuthController
         }
 
         // Inclui a vista para o formulário de login
-        require_once './app/views/loginView.php';
+        require_once './app/views/loginRegist/loginView.php';
     }
 
     // Método para terminar a sessão (logout)

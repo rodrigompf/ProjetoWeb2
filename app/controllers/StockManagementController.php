@@ -44,7 +44,7 @@ class StockManagementController
         }
 
         // Carrega a view para exibir a gestão de stock
-        require_once './app/views/stockManagementView.php';
+        require_once './app/views/homepage/stockManagementView.php';
     }
 
     /**

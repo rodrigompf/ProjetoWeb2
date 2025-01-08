@@ -20,7 +20,7 @@ class BannersController
         }
 
         // Incluir a vista para exibir os banners
-        require_once './app/views/bannersView.php';
+        require_once './app/views/banners/bannersView.php';
     }
 
     // Adicionar um novo banner
@@ -60,7 +60,7 @@ class BannersController
         }
 
         // Incluir a vista para adicionar um novo banner
-        require_once './app/views/addBannersView.php';
+        require_once './app/views/banners/addBannersView.php';
     }
 
     // Eliminar um banner
@@ -141,7 +141,7 @@ class BannersController
         }
 
         // Incluir a vista para editar o banner
-        require_once './app/views/editBannersView.php';
+        require_once './app/views/banners/editBannersView.php';
     }
 }
 ?>

@@ -7,7 +7,7 @@ class AdminController
     // Método para exibir a página inicial de administração
     public function index()
     {
-        require_once './app/views/adminView.php';
+        require_once './app/views/homepage/adminView.php';
     }
 
     // Método para criar um novo produto
@@ -80,7 +80,7 @@ class AdminController
         }
 
         // Incluir a vista com mensagens de feedback
-        require_once './app/views/createProdutosView.php';
+        require_once './app/views/produtos/createProdutosView.php';
     }
 
     // Método para listar os produtos editáveis
@@ -101,7 +101,7 @@ class AdminController
         }
 
         // Incluir a vista para listar os produtos
-        require_once './app/views/editListView.php';
+        require_once './app/views/produtos/editListView.php';
     }
 
     // Método para exibir o formulário de edição de um produto
@@ -219,7 +219,7 @@ class AdminController
         }
 
         // Incluir a vista de formulário de edição
-        require_once './app/views/editFormView.php';
+        require_once './app/views/produtos/editFormView.php';
     }
 
     // Método para eliminar um produto
