@@ -6,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Produtos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        /**
+         * Função para filtrar os produtos com base no texto digitado na barra de pesquisa
+         */
+        function filterProducts() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const targetSelector = document.getElementById('search-bar').getAttribute('data-target');
+            const nameColumnIndex = parseInt(document.getElementById('search-bar').getAttribute('data-name-column'), 10) - 1;
+
+            const rows = document.querySelectorAll(targetSelector); // Seleciona as linhas alvo
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells[nameColumnIndex] && cells[nameColumnIndex].textContent.toLowerCase().includes(query)) {
+                    row.style.display = ''; // Exibe a linha
+                } else {
+                    row.style.display = 'none'; // Oculta a linha
+                }
+            });
+        }
+    </script>
 </head>
 
 <body class="bg-[rgb(247,246,223)]">
@@ -20,14 +41,16 @@
         <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Produtos</h1>
 
         <!-- Formulário de pesquisa para filtrar produtos por nome -->
-        <form method="GET" class="mb-6">
+        <div class="mb-6">
             <input
                 type="text"
-                name="search"
-                placeholder="Pesquisar pelo nome"
-                value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
-                class="w-full px-4 py-2 rounded border">
-        </form>
+                id="search-bar"
+                onkeyup="filterProducts()"
+                placeholder="Pesquisar produtos pelo nome..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-target="tbody tr"
+                data-name-column="2">
+        </div>
 
         <!-- Tabela com a lista de produtos -->
         <table class="w-full bg-white rounded shadow">

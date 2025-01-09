@@ -25,7 +25,7 @@
     </style>
     <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-3xl font-bold">
-            <a href="/">Supermercado Online</a>
+            <a href="/">Cesta 24</a>
         </h1>
         <div class="flex items-center gap-4">
             <div class="flex items-center gap-2">
