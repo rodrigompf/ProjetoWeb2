@@ -21,8 +21,8 @@ class HomePageController
         // Criar uma instância do modelo HomeModel para interagir com os dados da página inicial
         $homeModel = new HomeModel();
 
-        // Obter os produtos com desconto para exibir na página inicial
-        $produtosComDesconto = $homeModel->getProdutosComDesconto();
+        // Obter os 12 produtos com desconto aleatórios para exibir na homepage
+        $produtosComDesconto = $homeModel->getProdutosComDesconto(12);
 
         // Obter os banners utilizando o BannerController
         $banners = $this->bannerController->getBanners();

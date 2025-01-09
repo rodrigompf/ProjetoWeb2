@@ -18,16 +18,17 @@ class HomeModel
     /**
      * Obtém os produtos com desconto e calcula o preço com o desconto aplicado.
      */
-    public function getProdutosComDesconto(): array
+    public function getProdutosComDesconto($limite = 0): array
     {
+        // Se não for passado um limite, retornamos todos os produtos
+        $limiteQuery = ($limite === 0) ? "" : "LIMIT " . (int)$limite;
+
         $query = "
             SELECT p.*, c.nome AS categoria_nome
             FROM produtos p
             JOIN categorias c ON p.categoria_id = c.id
             WHERE p.desconto = 1 AND p.discount_price > 0
-            ORDER BY RAND() -- Ordena aleatoriamente
-            LIMIT 12        -- Limita a 12 produtos
-        ";
+            ORDER BY RAND() " . $limiteQuery;  // Garante que os produtos sejam aleatórios
 
         // Prepara e executa a consulta
         $stat = $this->db->prepare($query);
