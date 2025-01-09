@@ -28,31 +28,40 @@ class CategoriasController
     public function create()
     {
         $error = null;
-        $success = null;
 
         try {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Obter os dados do formulário
                 $nome = $_POST['nome'] ?? null;
-                $image_url = $_POST['image_url'] ?? null;
+                $imageFile = $_FILES['image'] ?? null;
 
                 // Verificar se os campos obrigatórios foram preenchidos
-                if (!$nome || !$image_url) {
-                    $error = "Os campos Nome e URL da Imagem são obrigatórios.";
+                if (!$nome || !$imageFile || $imageFile['error'] !== UPLOAD_ERR_OK) {
+                    $error = "O campo Nome e uma imagem válida são obrigatórios.";
                 } else {
-                    // Inserir a nova categoria na base de dados
-                    $conn = Connection::getInstance();
-                    $sql = "INSERT INTO categorias (nome, image_url) VALUES (:nome, :image_url)";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bindParam(':nome', $nome);
-                    $stmt->bindParam(':image_url', $image_url);
+                    // Processar o upload da imagem
+                    $uploadDir = './assets/categorias/';
+                    $imageExtension = pathinfo($imageFile['name'], PATHINFO_EXTENSION);
+                    $imageName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $nome) . '.' . $imageExtension;
+                    $uploadPath = $uploadDir . $imageName;
 
-                    if ($stmt->execute()) {
-                        // Redirecionar para a vista de categorias em caso de sucesso
-                        header("Location: /categorias");
-                        exit;
+                    if (move_uploaded_file($imageFile['tmp_name'], $uploadPath)) {
+                        // Inserir a nova categoria na base de dados
+                        $conn = Connection::getInstance();
+                        $sql = "INSERT INTO categorias (nome, image_url) VALUES (:nome, :image_url)";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bindParam(':nome', $nome);
+                        $stmt->bindParam(':image_url', $uploadPath);
+
+                        if ($stmt->execute()) {
+                            // Redirecionar para a vista de categorias em caso de sucesso
+                            header("Location: /categorias");
+                            exit;
+                        } else {
+                            $error = "Erro ao adicionar categoria.";
+                        }
                     } else {
-                        $error = "Erro ao adicionar categoria.";
+                        $error = "Erro ao fazer upload da imagem.";
                     }
                 }
             }
@@ -63,6 +72,7 @@ class CategoriasController
         // Incluir a vista para adicionar uma nova categoria
         require_once './app/views/categorias/addcategoriasView.php';
     }
+
 
     // Eliminar uma categoria
     public function delete($id)
@@ -96,7 +106,6 @@ class CategoriasController
     public function edit($id)
     {
         $error = null;
-        $success = null;
 
         try {
             $conn = Connection::getInstance();
@@ -115,26 +124,37 @@ class CategoriasController
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Obter os novos dados do formulário
                 $nome = $_POST['nome'] ?? null;
-                $image_url = $_POST['image_url'] ?? null;
+                $imageFile = $_FILES['image'] ?? null;
 
-                // Verificar se os campos obrigatórios foram preenchidos
-                if (!$nome || !$image_url) {
-                    $error = "Os campos Nome e URL da Imagem são obrigatórios.";
-                } else {
-                    // Atualizar a categoria na base de dados
-                    $sql = "UPDATE categorias SET nome = :nome, image_url = :image_url WHERE id = :id";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bindParam(':nome', $nome);
-                    $stmt->bindParam(':image_url', $image_url);
-                    $stmt->bindParam(':id', $id);
+                // Atualizar apenas o nome se nenhuma nova imagem for enviada
+                $imagePath = $categoria['image_url'];
 
-                    if ($stmt->execute()) {
-                        // Redirecionar para a vista de categorias em caso de sucesso
-                        header("Location: /categorias");
-                        exit;
+                if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
+                    $uploadDir = './assets/categorias/';
+                    $imageExtension = pathinfo($imageFile['name'], PATHINFO_EXTENSION);
+                    $imageName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $categoria['nome']) . '.' . $imageExtension;
+                    $uploadPath = $uploadDir . $imageName;
+
+                    if (move_uploaded_file($imageFile['tmp_name'], $uploadPath)) {
+                        $imagePath = $uploadPath;
                     } else {
-                        $error = "Erro ao atualizar categoria.";
+                        $error = "Erro ao salvar a nova imagem.";
                     }
+                }
+
+                // Atualizar os dados na base de dados
+                $sql = "UPDATE categorias SET nome = :nome, image_url = :image_url WHERE id = :id";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':nome', $nome);
+                $stmt->bindParam(':image_url', $imagePath);
+                $stmt->bindParam(':id', $id);
+
+                if ($stmt->execute()) {
+                    // Redirecionar para a lista de categorias em caso de sucesso
+                    header("Location: /categorias");
+                    exit;
+                } else {
+                    $error = "Erro ao atualizar categoria.";
                 }
             }
         } catch (Exception $e) {

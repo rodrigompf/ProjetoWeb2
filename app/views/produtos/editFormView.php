@@ -53,9 +53,9 @@
                 <input type="number" name="preco" id="preco" step="0.01" value="<?= htmlspecialchars($produto['preco']) ?>" class="w-full px-4 py-2 rounded border">
             </div>
 
-            <!-- Campo para editar o preço com desconto -->
+            <!-- Campo para editar o percentagem do desconto -->
             <div class="mb-4">
-                <label for="discount_price" class="block text-gray-700 font-semibold mb-2">Preço com Desconto</label>
+                <label for="discount_price" class="block text-gray-700 font-semibold mb-2">Percentagem do desconto</label>
                 <input type="number" name="discount_price" id="discount_price" step="0.01" value="<?= htmlspecialchars($produto['discount_price']) ?>" class="w-full px-4 py-2 rounded border">
             </div>
 
