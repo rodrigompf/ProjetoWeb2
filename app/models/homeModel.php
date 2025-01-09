@@ -25,7 +25,8 @@ class HomeModel
             FROM produtos p
             JOIN categorias c ON p.categoria_id = c.id
             WHERE p.desconto = 1 AND p.discount_price > 0
-            ORDER BY p.preco DESC
+            ORDER BY RAND() -- Ordena aleatoriamente
+            LIMIT 12        -- Limita a 12 produtos
         ";
 
         // Prepara e executa a consulta

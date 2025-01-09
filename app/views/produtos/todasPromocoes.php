@@ -113,10 +113,17 @@ if (!isset($produtosComDesconto)) {
                                 </p>
 
                                 <!-- Botão para adicionar o produto ao carrinho -->
-                                <button onclick="addToCart(<?= $produto['id'] ?>)"
-                                    class="mt-4 inline-block bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition">
-                                    Adicionar ao Carrinho
-                                </button>
+                                <?php if (isset($_SESSION['user']) && $_SESSION['user']): ?>
+                                    <button onclick="addToCart(<?php echo $produto['id']; ?>)"
+                                        class="mt-4 inline-block bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition">
+                                        Adicionar ao Carrinho
+                                    </button>
+                                <?php else: ?>
+                                    <button onclick="javascript:alert('Por favor efetue o login para poder fazer compras.')"
+                                        class="mt-4 inline-block bg-gray-500 text-white rounded-lg py-2 px-4 cursor-not-allowed">
+                                        Adicionar ao Carrinho
+                                    </button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
