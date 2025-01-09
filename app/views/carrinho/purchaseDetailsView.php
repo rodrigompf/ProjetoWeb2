@@ -6,7 +6,7 @@
     <title>Detalhes da Compra</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 py-10">
+<body class="bg-[rgb(247,246,223)] py-10">
 
     <div class="max-w-6xl mx-auto px-4">
         <h1 class="text-4xl font-bold text-center mb-6">Detalhes da Compra</h1>

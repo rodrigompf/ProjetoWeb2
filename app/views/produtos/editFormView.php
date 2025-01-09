@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
     <div class="container mx-auto py-10">
         <!-- Botão para voltar à página anterior -->
         <a href="javascript:history.back()"

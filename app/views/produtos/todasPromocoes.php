@@ -71,7 +71,7 @@ if (!isset($produtosComDesconto)) {
     </script>
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
+<body class="bg-[rgb(247,246,223)] flex flex-col min-h-screen">
 
     <!-- Cabeçalho -->
     <?php include './app/views/homepage/header.php'; ?>

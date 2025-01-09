@@ -89,7 +89,7 @@
     </script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
     <?php include './app/views/homepage/header.php'; ?>
     <div class="container mx-auto py-10">
         <h1 class="text-3xl font-bold mb-6 text-center">O Seu Carrinho</h1>

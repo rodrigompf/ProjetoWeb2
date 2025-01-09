@@ -10,7 +10,7 @@
 
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-[rgb(247,246,223)] flex items-center justify-center min-h-screen">
     <!-- Caixa de formulário centralizada -->
     <div class="bg-white p-8 rounded shadow-md w-96">
         <!-- Botão para voltar à página anterior -->

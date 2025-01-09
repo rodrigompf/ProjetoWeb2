@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-[rgb(247,246,223)] flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded shadow-md w-96">
         <a href="javascript:history.back()"
             class="absolute top-8 left-8 px-12 py-4 bg-gray-500 text-white font-semibold rounded shadow hover:bg-gray-600 transition">

@@ -88,7 +88,7 @@ if (session_status() == PHP_SESSION_NONE) {
     </script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
     <?php include './app/views/homepage/header.php'; ?>
 
     <div class="container mx-auto py-10">

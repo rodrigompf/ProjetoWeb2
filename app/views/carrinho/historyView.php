@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
     <!-- Inclusão do cabeçalho da página -->
     <?php include './app/views/homepage/header.php'; ?>
 

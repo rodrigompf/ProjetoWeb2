@@ -21,7 +21,7 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
     <div class="container mx-auto py-10">
         <!-- Título da página para adicionar um novo produto -->
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Adicionar Novo Produto</h1>

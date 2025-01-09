@@ -23,7 +23,7 @@
     </script>
 </head>
 
-<body class="bg-gray-100 flex flex-col items-center min-h-screen p-4">
+<body class="bg-[rgb(247,246,223)] flex flex-col items-center min-h-screen p-4">
 
     <!-- Botão para voltar à página anterior -->
     <a href="javascript:history.back()"

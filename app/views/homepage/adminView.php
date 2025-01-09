@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-[rgb(247,246,223)] flex items-center justify-center min-h-screen">
 
     <!-- Botão para voltar à página anterior -->
     <a href="javascript:history.back()"
