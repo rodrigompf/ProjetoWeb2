@@ -107,12 +107,22 @@ class CartController
                 ];
             }
 
-            // Retornar sucesso como resposta em formato JSON
-            echo json_encode(['status' => 'success', 'message' => 'Produto adicionado ao carrinho']);
+            // Obter a contagem de itens no carrinho
+            $cart_count = count($_SESSION['cart']);
+
+            // Retornar sucesso como resposta em formato JSON com a quantidade de itens no carrinho
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Produto adicionado ao carrinho',
+                'cart_count' => $cart_count
+            ]);
             exit();
         } else {
             // Caso o produto não exista, retornar erro
-            echo json_encode(['status' => 'error', 'message' => 'Erro ao adicionar produto ao carrinho']);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Erro ao adicionar produto ao carrinho'
+            ]);
             exit();
         }
     }

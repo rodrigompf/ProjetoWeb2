@@ -167,4 +167,44 @@ if (session_status() == PHP_SESSION_NONE) {
     </div>
 </body>
 
+<script>
+    // Função assíncrona para adicionar um produto ao carrinho
+    async function addToCart(productId) {
+        try {
+            // Envia a requisição para adicionar o produto ao carrinho
+            const response = await fetch(`/cart/add/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            // Verifica se a resposta foi bem-sucedida
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Atualiza a contagem do carrinho
+                    updateCartCount(data.cart_count);
+                    alert(data.message); // Exibe mensagem de sucesso
+                } else {
+                    alert('Erro ao adicionar ao carrinho');
+                }
+            } else {
+                alert('Erro ao adicionar ao carrinho');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao adicionar ao carrinho');
+        }
+    }
+
+    // Função para atualizar o contador do carrinho no cabeçalho
+    function updateCartCount(cartCount) {
+        const cartCountElement = document.getElementById('cart-count');
+        cartCountElement.innerText = cartCount;
+    }
+</script>
+
+
 </html>

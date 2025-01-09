@@ -38,9 +38,11 @@
 
                     <!-- Exibir o número de itens no carrinho, se houver -->
                     <?php if (!empty($_SESSION['cart'])): ?>
-                        <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
-                            <?php echo count($_SESSION['cart']); ?>
+                        <!-- Exibir o número de itens no carrinho, se houver -->
+                        <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
+                            <?php echo !empty($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?>
                         </span>
+
                     <?php endif; ?>
                 </a>
                 <!-- Verificação se o utilizador está logado -->
