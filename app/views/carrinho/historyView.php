@@ -7,10 +7,9 @@
     <title>Histórico de Compras</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
+<?php include './app/views/homepage/header.php'; ?>
 <body class="bg-[rgb(247,246,223)]">
     <!-- Inclusão do cabeçalho da página -->
-    <?php include './app/views/homepage/header.php'; ?>
 
     <div class="container mx-auto py-10">
         <h1 class="text-3xl font-bold mb-6 text-center">Histórico de Compras</h1>

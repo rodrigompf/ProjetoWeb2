@@ -44,6 +44,7 @@ if (session_status() == PHP_SESSION_NONE) {
             /* Limita a 3 linhas */
             -webkit-box-orient: vertical;
         }
+        
     </style>
 
     <script>
