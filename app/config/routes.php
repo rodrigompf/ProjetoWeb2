@@ -147,4 +147,13 @@ return [
     'action' => 'delete' // Ação para excluir o banner
 ],
 
+'profile' => [
+    'controller' => 'ProfileController',
+    'action' => 'view'
+],
+'edit-profile' => [
+    'controller' => 'ProfileController',
+    'action' => 'edit'
+],
+
 ];

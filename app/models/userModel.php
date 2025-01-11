@@ -65,4 +65,32 @@ class UserModel
         // Retorna false se a autenticação falhar
         return false;
     }
+    public function getUserById($userId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->execute([':id' => $userId]);
+        return $stmt->fetch();
+    }
+
+    // Update user information
+    public function updateUser($userId, $username, $email, $age, $phone, $address)
+    {
+        $stmt = $this->db->prepare("UPDATE users SET username = :username, email = :email, age = :age, phone = :phone, address = :address WHERE id = :id");
+        return $stmt->execute([
+            ':username' => $username,
+            ':email' => $email,
+            ':age' => $age,
+            ':phone' => $phone,
+            ':address' => $address,
+            ':id' => $userId,
+        ]);
+    }
+    public function updateProfileImage($userId, $imageName)
+    {
+        $stmt = $this->db->prepare("UPDATE users SET profile_image = :profile_image WHERE id = :id");
+        return $stmt->execute([
+            ':profile_image' => $imageName,
+            ':id' => $userId,
+        ]);
+    }
 }

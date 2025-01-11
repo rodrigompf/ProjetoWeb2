@@ -35,13 +35,17 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 10a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
                     </svg>
-
                     <!-- Exibir o número de itens no carrinho, se houver -->
                     <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
                         <?php echo !empty($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?>
                     </span>
-
                 </a>
+
+                <a href="/profile" class="relative">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a5 5 0 015 5v1h3a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V10a2 2 0 012-2h3V7a5 5 0 015-5z" />
+    </svg>
+</a>
                 <!-- Verificação se o utilizador está logado -->
                 <?php if (isset($_SESSION['user']) && $_SESSION['user']): ?>
                     <!-- Botão de Logout -->
