@@ -45,7 +45,6 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Formulário para Adicionar Produto -->
         <form action="" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md">
-
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
 
             <!-- Nome do Produto -->
@@ -76,7 +75,6 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="mb-4">
                 <label for="categoria_id" class="block text-gray-700 font-semibold mb-2">Categoria</label>
                 <select name="categoria_id" id="categoria_id" required class="w-full px-4 py-2 rounded border">
-                    <!-- Exibindo as categorias do banco de dados -->
                     <?php foreach ($categorias as $categoria): ?>
                         <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
                     <?php endforeach; ?>
@@ -92,17 +90,18 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </select>
             </div>
 
-            <!-- Campo para URL da Imagem do Produto -->
+            <!-- Campo para Upload de Imagem -->
             <div class="mb-4">
-                <label for="imagem_url" class="block text-gray-700 font-semibold mb-2">URL da Imagem</label>
-                <input type="url" name="imagem_url" id="imagem_url" class="w-full px-4 py-2 rounded border" placeholder="Cole o URL da imagem aqui">
+                <label for="imagem" class="block text-gray-700 font-semibold mb-2">Imagem do Produto</label>
+                <input type="file" name="imagem" id="imagem" accept="image/*" required class="w-full px-4 py-2 rounded border">
             </div>
 
-            <!-- Botão de Submissão para salvar o produto -->
+            <!-- Botão de Submissão -->
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Salvar Produto
             </button>
         </form>
+
     </div>
 </body>
 

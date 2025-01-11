@@ -13,8 +13,8 @@ class AdminController
     // Método para criar um novo produto
     public function create()
     {
-        $error = null; // Variável para armazenar mensagens de erro
-        $success = null; // Variável para armazenar mensagens de sucesso
+        $error = null;
+        $success = null;
 
         try {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,51 +27,54 @@ class AdminController
                 $discount_price = $_POST['discount_price'] ?? null;
                 $categoria_id = $_POST['categoria_id'] ?? null;
                 $desconto = $_POST['desconto'] ?? null;
-                $imagem_url = $_POST['imagem_url'] ?? null; // Captura da URL da imagem
 
                 // Validação dos campos obrigatórios
                 if (!$nome || !$preco || !$categoria_id) {
                     $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
-                } else {
-                    // Validação da URL da imagem
-                    if (!filter_var($imagem_url, FILTER_VALIDATE_URL)) {
-                        $error = "A URL da imagem fornecida não é válida.";
+                } elseif (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+                    // Validação e upload da imagem
+                    $uploadDir = './assets/produtos/';
+                    $imageTmpName = $_FILES['imagem']['tmp_name'];
+                    $originalExtension = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
+                    $imageName = $nome . '.' . $originalExtension; // Usa o nome do produto
+                    $imagePath = $uploadDir . $imageName;
+
+                    if (!move_uploaded_file($imageTmpName, $imagePath)) {
+                        $error = "Erro ao fazer upload da imagem.";
                     }
+                } else {
+                    $error = "Por favor, envie uma imagem válida.";
+                }
 
-                    // Se não houver erros, encontrar o próximo ID disponível
-                    if (!$error) {
-                        $sql = "SELECT MIN(t1.id + 1) AS next_id 
-                                FROM produtos t1 
-                                WHERE NOT EXISTS (SELECT t2.id FROM produtos t2 WHERE t2.id = t1.id + 1)";
-                        $stmt = $conn->query($sql);
-                        $nextId = $stmt->fetchColumn();
+                // Inserção no banco de dados se não houver erros
+                if (!$error) {
+                    $sql = "SELECT MIN(t1.id + 1) AS next_id 
+                        FROM produtos t1 
+                        WHERE NOT EXISTS (SELECT t2.id FROM produtos t2 WHERE t2.id = t1.id + 1)";
+                    $stmt = $conn->query($sql);
+                    $nextId = $stmt->fetchColumn();
+                    $nextId = $nextId ?: 1;
 
-                        // Caso a tabela esteja vazia, o próximo ID será 1
-                        $nextId = $nextId ?: 1;
+                    $sql = "INSERT INTO produtos (id, nome, descricao, preco, discount_price, categoria_id, imagem, desconto, stock) 
+                        VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto, :stock)";
+                    $stmt = $conn->prepare($sql);
 
-                        // Inserção dos dados do produto na base de dados
-                        $sql = "INSERT INTO produtos (id, nome, descricao, preco, discount_price, categoria_id, imagem, desconto, stock) 
-                                VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto, :stock)";
+                    $stmt->bindParam(':id', $nextId);
+                    $stmt->bindParam(':nome', $nome);
+                    $stmt->bindParam(':descricao', $descricao);
+                    $stmt->bindParam(':preco', $preco);
+                    $stmt->bindParam(':discount_price', $discount_price);
+                    $stmt->bindParam(':categoria_id', $categoria_id);
+                    $stmt->bindParam(':imagem', $imageName); // Salva o nome do arquivo no banco
+                    $stmt->bindParam(':desconto', $desconto);
 
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(':id', $nextId);
-                        $stmt->bindParam(':nome', $nome);
-                        $stmt->bindParam(':descricao', $descricao);
-                        $stmt->bindParam(':preco', $preco);
-                        $stmt->bindParam(':discount_price', $discount_price);
-                        $stmt->bindParam(':categoria_id', $categoria_id);
-                        $stmt->bindParam(':imagem', $imagem_url); // Guarda a URL da imagem
-                        $stmt->bindParam(':desconto', $desconto);
+                    $stock = 0;
+                    $stmt->bindParam(':stock', $stock);
 
-                        // Define o stock como 0
-                        $stock = 0;
-                        $stmt->bindParam(':stock', $stock);
-
-                        if ($stmt->execute()) {
-                            $success = "Produto adicionado com sucesso!";
-                        } else {
-                            $error = "Erro ao adicionar produto.";
-                        }
+                    if ($stmt->execute()) {
+                        $success = "Produto adicionado com sucesso!";
+                    } else {
+                        $error = "Erro ao adicionar produto.";
                     }
                 }
             }
@@ -79,9 +82,10 @@ class AdminController
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
 
-        // Incluir a vista com mensagens de feedback
+        // Incluir a view
         require_once './app/views/produtos/createProdutosView.php';
     }
+
 
     // Método para listar os produtos editáveis
     public function editList()
@@ -179,10 +183,10 @@ class AdminController
                     // Atualizar os dados do produto
                     if (!$error) {
                         $sql = "UPDATE produtos 
-                                SET nome = :nome, descricao = :descricao, preco = :preco, 
-                                    discount_price = :discount_price, categoria_id = :categoria_id, 
-                                    desconto = :desconto, imagem = :imagem 
-                                WHERE id = :id";
+                            SET nome = :nome, descricao = :descricao, preco = :preco, 
+                                discount_price = :discount_price, categoria_id = :categoria_id, 
+                                desconto = :desconto, imagem = :imagem 
+                            WHERE id = :id";
 
                         $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':nome', $nome);
@@ -221,6 +225,7 @@ class AdminController
         // Incluir a vista de formulário de edição
         require_once './app/views/produtos/editFormView.php';
     }
+
 
     // Método para eliminar um produto
     public function delete($id)
@@ -265,5 +270,4 @@ class AdminController
         header("Location: /produtos/edit?success=" . urlencode($success) . "&error=" . urlencode($error));
         exit;
     }
-    
 }

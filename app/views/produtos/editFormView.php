@@ -31,7 +31,7 @@
         <?php endif; ?>
 
         <!-- Formulário para editar o produto -->
-        <form method="POST" class="bg-white p-8 rounded shadow-md">
+        <form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md">
 
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
 
@@ -76,7 +76,6 @@
             <div class="mb-4">
                 <label for="desconto" class="block text-gray-700 font-semibold mb-2">Desconto</label>
                 <select name="desconto" id="desconto" class="w-full px-4 py-2 rounded border">
-                    <!-- Opções para selecionar se o produto tem ou não desconto -->
                     <option value="0" <?= $produto['desconto'] == 0 ? 'selected' : '' ?>>Não</option>
                     <option value="1" <?= $produto['desconto'] == 1 ? 'selected' : '' ?>>Sim</option>
                 </select>
@@ -92,11 +91,11 @@
                 <?php endif; ?>
             </div>
 
-            <!-- Campo para editar a URL da nova imagem do produto -->
+            <!-- Campo para editar a imagem do produto -->
             <div class="mb-4">
-                <label for="imagem_url" class="block text-gray-700 font-semibold mb-2">URL da Imagem</label>
-                <input type="text" name="imagem_url" id="imagem_url" value="<?= htmlspecialchars($produto['imagem']) ?>" class="w-full px-4 py-2 rounded border">
-                <p class="text-sm text-gray-500 mt-2">Insira a URL de uma nova imagem para substituir a atual.</p>
+                <label for="imagem" class="block text-gray-700 font-semibold mb-2">Nova Imagem</label>
+                <input type="file" name="imagem" id="imagem" class="w-full px-4 py-2 rounded border">
+                <p class="text-sm text-gray-500 mt-2">Selecione uma nova imagem para substituir a atual.</p>
             </div>
 
             <!-- Botão para submeter as alterações -->
