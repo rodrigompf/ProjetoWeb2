@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2025 at 10:43 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Tempo de geração: 11-Jan-2025 às 15:35
+-- Versão do servidor: 10.4.32-MariaDB
+-- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `supermarket`
+-- Banco de dados: `supermarket`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `banners`
+-- Estrutura da tabela `banners`
 --
 
 CREATE TABLE `banners` (
@@ -34,7 +34,7 @@ CREATE TABLE `banners` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `banners`
+-- Extraindo dados da tabela `banners`
 --
 
 INSERT INTO `banners` (`id`, `name`, `image_url`) VALUES
@@ -46,7 +46,7 @@ INSERT INTO `banners` (`id`, `name`, `image_url`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categorias`
+-- Estrutura da tabela `categorias`
 --
 
 CREATE TABLE `categorias` (
@@ -56,7 +56,7 @@ CREATE TABLE `categorias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `categorias`
+-- Extraindo dados da tabela `categorias`
 --
 
 INSERT INTO `categorias` (`id`, `nome`, `image_url`) VALUES
@@ -74,7 +74,7 @@ INSERT INTO `categorias` (`id`, `nome`, `image_url`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compras_historico`
+-- Estrutura da tabela `compras_historico`
 --
 
 CREATE TABLE `compras_historico` (
@@ -86,7 +86,7 @@ CREATE TABLE `compras_historico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `compras_historico`
+-- Extraindo dados da tabela `compras_historico`
 --
 
 INSERT INTO `compras_historico` (`id`, `user_id`, `cart_data`, `total_price`, `created_at`) VALUES
@@ -104,7 +104,7 @@ INSERT INTO `compras_historico` (`id`, `user_id`, `cart_data`, `total_price`, `c
 -- --------------------------------------------------------
 
 --
--- Table structure for table `produtos`
+-- Estrutura da tabela `produtos`
 --
 
 CREATE TABLE `produtos` (
@@ -120,7 +120,7 @@ CREATE TABLE `produtos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `produtos`
+-- Extraindo dados da tabela `produtos`
 --
 
 INSERT INTO `produtos` (`id`, `nome`, `descricao`, `preco`, `categoria_id`, `imagem`, `discount_price`, `desconto`, `stock`) VALUES
@@ -139,6 +139,7 @@ INSERT INTO `produtos` (`id`, `nome`, `descricao`, `preco`, `categoria_id`, `ima
 (14, 'Ferro de Engomar', 'Ferro a vapor portátil', 15.00, 5, 'assets/produtos/ferro_de_engomar.jpg', NULL, 0, 71),
 (15, 'Micro-ondas', 'Micro-ondas com grill e função de descongelar', 70.00, 5, 'assets/produtos/micro-ondas.jpg', 60.00, 1, 12),
 (16, 'Carro de Controlo Remoto', 'Carro elétrico de alta velocidade', 30.00, 6, 'assets/produtos/carro_de_controlo_remoto.jpg', 25.00, 1, 99),
+(17, 'Maçã', 'sdsdsd', 23.00, 3, 'assets/produtos/Maçã_67827da505b26.jpg', 23.00, 1, 0),
 (18, 'Puzzle', 'Puzzle de 1000 peças', 15.00, 6, 'assets/produtos/puzzle.jpg', 12.00, 1, 57),
 (19, 'Chocolate de Leite', 'Barra de chocolate de leite, 200g', 2.50, 7, 'assets/produtos/chocolate_de_leite.jpg', 2.00, 1, 0),
 (20, 'Pacote de Gomas', 'Pacote de gomas sortidas', 1.50, 7, 'assets/produtos/pacote_de_gomas.jpg', NULL, 0, 82),
@@ -156,7 +157,7 @@ INSERT INTO `produtos` (`id`, `nome`, `descricao`, `preco`, `categoria_id`, `ima
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Estrutura da tabela `users`
 --
 
 CREATE TABLE `users` (
@@ -165,51 +166,55 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `admin` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `age` int(11) DEFAULT NULL,
+  `phone` varchar(15) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `profile_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Extraindo dados da tabela `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `admin`, `created_at`) VALUES
-(1, 'admin', 'admin@gmail.com', '$2y$10$TEsXaNEWG5ceqxJ9eKkii.gSTl8QQzXCG1I1zcqkCcnjGETipvcsS', 1, '2024-12-05 19:26:29'),
-(2, 'alex', 'alex@gmail.com', '$2y$10$iYSIIIkocSHNIqIHPCAbPeYuOL5Da9DlLgACUvyIDUBPF0fyZcXxW', 0, '2024-12-12 11:33:50'),
-(3, 'rodrigo', 'rodrigo@gmail.com', '$2y$10$Xs5DtJYhvjvdrnYwFjiZHeFDud4rAEYpNtw/9V5Z.ehLcUckv1R5K', 0, '2025-01-09 11:08:46');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `admin`, `age`, `phone`, `address`, `created_at`, `profile_image`) VALUES
+(1, 'admin', 'admin@gmail.com', '$2y$10$TEsXaNEWG5ceqxJ9eKkii.gSTl8QQzXCG1I1zcqkCcnjGETipvcsS', 1, 32, '2222222222', 'rua ssss', '2024-12-05 19:26:29', NULL),
+(2, 'alex', 'alex@gmail.com', '$2y$10$iYSIIIkocSHNIqIHPCAbPeYuOL5Da9DlLgACUvyIDUBPF0fyZcXxW', 0, NULL, NULL, NULL, '2024-12-12 11:33:50', NULL),
+(3, 'rodrigo', 'rodrigo@gmail.com', '$2y$10$Xs5DtJYhvjvdrnYwFjiZHeFDud4rAEYpNtw/9V5Z.ehLcUckv1R5K', 0, NULL, NULL, NULL, '2025-01-09 11:08:46', NULL);
 
 --
--- Indexes for dumped tables
+-- Índices para tabelas despejadas
 --
 
 --
--- Indexes for table `banners`
+-- Índices para tabela `banners`
 --
 ALTER TABLE `banners`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `categorias`
+-- Índices para tabela `categorias`
 --
 ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nome` (`nome`);
 
 --
--- Indexes for table `compras_historico`
+-- Índices para tabela `compras_historico`
 --
 ALTER TABLE `compras_historico`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `produtos`
+-- Índices para tabela `produtos`
 --
 ALTER TABLE `produtos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `categoria_id` (`categoria_id`);
 
 --
--- Indexes for table `users`
+-- Índices para tabela `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -217,51 +222,51 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT for table `banners`
+-- AUTO_INCREMENT de tabela `banners`
 --
 ALTER TABLE `banners`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `categorias`
+-- AUTO_INCREMENT de tabela `categorias`
 --
 ALTER TABLE `categorias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `compras_historico`
+-- AUTO_INCREMENT de tabela `compras_historico`
 --
 ALTER TABLE `compras_historico`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
--- AUTO_INCREMENT for table `produtos`
+-- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Constraints for dumped tables
+-- Restrições para despejos de tabelas
 --
 
 --
--- Constraints for table `compras_historico`
+-- Limitadores para a tabela `compras_historico`
 --
 ALTER TABLE `compras_historico`
   ADD CONSTRAINT `compras_historico_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `produtos`
+-- Limitadores para a tabela `produtos`
 --
 ALTER TABLE `produtos`
   ADD CONSTRAINT `produtos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE SET NULL;
