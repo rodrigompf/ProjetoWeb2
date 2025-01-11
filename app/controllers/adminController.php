@@ -15,11 +15,11 @@ class AdminController
     {
         $error = null;
         $success = null;
-
+    
         try {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $conn = Connection::getInstance();
-
+    
                 // Captura dos dados enviados no formulário
                 $nome = $_POST['nome'] ?? null;
                 $descricao = $_POST['descricao'] ?? null;
@@ -27,25 +27,26 @@ class AdminController
                 $discount_price = $_POST['discount_price'] ?? null;
                 $categoria_id = $_POST['categoria_id'] ?? null;
                 $desconto = $_POST['desconto'] ?? null;
-
+    
                 // Validação dos campos obrigatórios
                 if (!$nome || !$preco || !$categoria_id) {
                     $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
                 } elseif (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-                    // Validação e upload da imagem
-                    $uploadDir = './assets/produtos/';
+                    // Configuração do upload da imagem
+                    $uploadDir = 'assets/produtos/';
                     $imageTmpName = $_FILES['imagem']['tmp_name'];
                     $originalExtension = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
-                    $imageName = $nome . '.' . $originalExtension; // Usa o nome do produto
+                    $imageName = uniqid($nome . '_') . '.' . $originalExtension; // Gera um nome único
                     $imagePath = $uploadDir . $imageName;
-
+    
+                    // Faz o upload da imagem
                     if (!move_uploaded_file($imageTmpName, $imagePath)) {
                         $error = "Erro ao fazer upload da imagem.";
                     }
                 } else {
                     $error = "Por favor, envie uma imagem válida.";
                 }
-
+    
                 // Inserção no banco de dados se não houver erros
                 if (!$error) {
                     $sql = "SELECT MIN(t1.id + 1) AS next_id 
@@ -54,23 +55,23 @@ class AdminController
                     $stmt = $conn->query($sql);
                     $nextId = $stmt->fetchColumn();
                     $nextId = $nextId ?: 1;
-
+    
                     $sql = "INSERT INTO produtos (id, nome, descricao, preco, discount_price, categoria_id, imagem, desconto, stock) 
                         VALUES (:id, :nome, :descricao, :preco, :discount_price, :categoria_id, :imagem, :desconto, :stock)";
                     $stmt = $conn->prepare($sql);
-
+    
                     $stmt->bindParam(':id', $nextId);
                     $stmt->bindParam(':nome', $nome);
                     $stmt->bindParam(':descricao', $descricao);
                     $stmt->bindParam(':preco', $preco);
                     $stmt->bindParam(':discount_price', $discount_price);
                     $stmt->bindParam(':categoria_id', $categoria_id);
-                    $stmt->bindParam(':imagem', $imageName); // Salva o nome do arquivo no banco
+                    $stmt->bindParam(':imagem', $imagePath); // Salva o caminho completo no banco
                     $stmt->bindParam(':desconto', $desconto);
-
+    
                     $stock = 0;
                     $stmt->bindParam(':stock', $stock);
-
+    
                     if ($stmt->execute()) {
                         $success = "Produto adicionado com sucesso!";
                     } else {
@@ -81,11 +82,11 @@ class AdminController
         } catch (PDOException $e) {
             $error = "Erro no banco de dados: " . $e->getMessage();
         }
-
+    
         // Incluir a view
         require_once './app/views/produtos/createProdutosView.php';
     }
-
+    
 
     // Método para listar os produtos editáveis
     public function editList()
@@ -110,121 +111,102 @@ class AdminController
 
     // Método para exibir o formulário de edição de um produto
     public function editForm($id)
-    {
-        $error = null; // Mensagem de erro
-        $success = null; // Mensagem de sucesso
+{
+    $error = null; // Mensagem de erro
+    $success = null; // Mensagem de sucesso
 
-        try {
-            $conn = Connection::getInstance();
+    try {
+        $conn = Connection::getInstance();
 
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // Captura dos dados do formulário
-                $nome = $_POST['nome'] ?? null;
-                $descricao = $_POST['descricao'] ?? null;
-                $preco = $_POST['preco'] ?? null;
-                $discount_price = $_POST['discount_price'] ?? null;
-                $categoria_id = $_POST['categoria_id'] ?? null;
-                $desconto = $_POST['desconto'] ?? null;
-                $imagem_url = $_POST['imagem_url'] ?? null; // URL da imagem
-                $imagem_nova = $_FILES['imagem'] ?? null;  // Imagem enviada pelo utilizador
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Captura dos dados do formulário
+            $nome = $_POST['nome'] ?? null;
+            $descricao = $_POST['descricao'] ?? null;
+            $preco = $_POST['preco'] ?? null;
+            $discount_price = $_POST['discount_price'] ?? null;
+            $categoria_id = $_POST['categoria_id'] ?? null;
+            $desconto = $_POST['desconto'] ?? null;
 
-                // Validar campos obrigatórios
-                if (!$nome || !$preco || !$categoria_id) {
-                    $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
-                } else {
-                    // Obter os detalhes do produto original
-                    $sql = "SELECT imagem FROM produtos WHERE id = :id";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bindParam(':id', $id);
-                    $stmt->execute();
-                    $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Validar campos obrigatórios
+            if (!$nome || !$preco || !$categoria_id) {
+                $error = "Os campos Nome, Preço e Categoria são obrigatórios.";
+            } else {
+                // Obter os detalhes do produto original
+                $sql = "SELECT imagem FROM produtos WHERE id = :id";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':id', $id);
+                $stmt->execute();
+                $produto = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                    $imagem_atual = $produto['imagem'];
+                $imagem_atual = $produto['imagem'];
 
-                    // Processar upload ou URL da imagem
-                    if ($imagem_nova && $imagem_nova['error'] === UPLOAD_ERR_OK) {
-                        $uploadDirs = [
-                            1 => 'peixes/',
-                            2 => 'carnes/',
-                            3 => 'frutas/',
-                            4 => 'sumos/',
-                            5 => 'eletrodomesticos/',
-                            6 => 'brinquedos/',
-                            7 => 'doces/',
-                            8 => 'higiene/',
-                            9 => 'congelados/',
-                            10 => 'pastelaria/',
-                        ];
+                // Processar upload da imagem
+                if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+                    $uploadDir = 'assets/produtos/';
+                    $imageTmpName = $_FILES['imagem']['tmp_name'];
+                    $originalExtension = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
+                    $imageName = uniqid($nome . '_') . '.' . $originalExtension;
+                    $imagePath = $uploadDir . $imageName;
 
-                        if (isset($uploadDirs[$categoria_id])) {
-                            $uploadDir = $uploadDirs[$categoria_id];
-                            if (!is_dir($uploadDir)) {
-                                mkdir($uploadDir, 0777, true);
-                            }
-
-                            $targetFile = $uploadDir . basename($imagem_nova['name']);
-
-                            if (!empty($imagem_atual) && file_exists($imagem_atual)) {
-                                unlink($imagem_atual); // Remove a imagem antiga
-                            }
-
-                            if (move_uploaded_file($imagem_nova['tmp_name'], $targetFile)) {
-                                $imagem_atual = $targetFile;
-                            } else {
-                                $error = "Erro ao fazer upload da nova imagem.";
-                            }
-                        } else {
-                            $error = "Categoria inválida.";
-                        }
-                    } elseif ($imagem_url && filter_var($imagem_url, FILTER_VALIDATE_URL)) {
-                        $imagem_atual = $imagem_url;
+                    // Remover a imagem antiga se existir
+                    if (!empty($imagem_atual) && file_exists($imagem_atual)) {
+                        unlink($imagem_atual);
                     }
 
-                    // Atualizar os dados do produto
-                    if (!$error) {
-                        $sql = "UPDATE produtos 
-                            SET nome = :nome, descricao = :descricao, preco = :preco, 
-                                discount_price = :discount_price, categoria_id = :categoria_id, 
-                                desconto = :desconto, imagem = :imagem 
-                            WHERE id = :id";
+                    // Fazer upload da nova imagem
+                    if (move_uploaded_file($imageTmpName, $imagePath)) {
+                        $imagem_atual = $imagePath;
+                    } else {
+                        $error = "Erro ao fazer upload da nova imagem.";
+                    }
+                }
 
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(':nome', $nome);
-                        $stmt->bindParam(':descricao', $descricao);
-                        $stmt->bindParam(':preco', $preco);
-                        $stmt->bindParam(':discount_price', $discount_price);
-                        $stmt->bindParam(':categoria_id', $categoria_id);
-                        $stmt->bindParam(':desconto', $desconto);
-                        $stmt->bindParam(':imagem', $imagem_atual);
-                        $stmt->bindParam(':id', $id);
+                // Atualizar os dados do produto
+                if (!$error) {
+                    $sql = "UPDATE produtos 
+                        SET nome = :nome, descricao = :descricao, preco = :preco, 
+                            discount_price = :discount_price, categoria_id = :categoria_id, 
+                            desconto = :desconto, imagem = :imagem 
+                        WHERE id = :id";
 
-                        if ($stmt->execute()) {
-                            $success = "Produto atualizado com sucesso!";
-                        } else {
-                            $error = "Erro ao atualizar o produto.";
-                        }
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindParam(':nome', $nome);
+                    $stmt->bindParam(':descricao', $descricao);
+                    $stmt->bindParam(':preco', $preco);
+                    $stmt->bindParam(':discount_price', $discount_price);
+                    $stmt->bindParam(':categoria_id', $categoria_id);
+                    $stmt->bindParam(':desconto', $desconto);
+                    $stmt->bindParam(':imagem', $imagem_atual);
+                    $stmt->bindParam(':id', $id);
+
+                    if ($stmt->execute()) {
+                        $success = "Produto atualizado com sucesso!";
+                    } else {
+                        $error = "Erro ao atualizar o produto.";
                     }
                 }
             }
-
-            // Obter os detalhes do produto
-            $sql = "SELECT * FROM produtos WHERE id = :id";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            $produto = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Obter categorias disponíveis
-            $sqlCategorias = "SELECT id, nome FROM categorias ORDER BY nome";
-            $stmtCategorias = $conn->query($sqlCategorias);
-            $categorias = $stmtCategorias->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $error = "Erro no banco de dados: " . $e->getMessage();
         }
 
-        // Incluir a vista de formulário de edição
-        require_once './app/views/produtos/editFormView.php';
+        // Obter os detalhes do produto
+        $sql = "SELECT * FROM produtos WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Obter categorias disponíveis
+        $sqlCategorias = "SELECT id, nome FROM categorias ORDER BY nome";
+        $stmtCategorias = $conn->query($sqlCategorias);
+        $categorias = $stmtCategorias->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $error = "Erro no banco de dados: " . $e->getMessage();
     }
+
+    // Incluir a vista de formulário de edição
+    require_once './app/views/produtos/editFormView.php';
+}
+
 
 
     // Método para eliminar um produto

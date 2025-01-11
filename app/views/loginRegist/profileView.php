@@ -15,15 +15,10 @@ if (isset($user)) {
     <!-- Tailwind CSS CDN (Add this to your head tag) -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
 
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">User Profile</h1>
-
-        <!-- Display Profile Image -->
-        <div class="text-center mb-6">
-            <img src="<?php echo $profileImageUrl; ?>" alt="Profile Image" class="w-32 h-32 rounded-full mx-auto object-cover">
-        </div>
         
         <table class="min-w-full table-auto">
             <tr class="border-b">
@@ -51,7 +46,16 @@ if (isset($user)) {
         <div class="mt-6 text-center">
             <a href="/edit-profile?id=<?php echo $user['id']; ?>" class="inline-block bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 transition">Edit Profile</a>
         </div>
+
+        <?php if (isset($_SESSION['user'])): ?>
+        <div class="flex justify-center mt-6">
+            <a href="/cart/history" class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                Ver Histórico de Compras
+            </a>
+        </div>
+        <?php endif; ?>
     </div>
+    
 
 </body>
 </html>

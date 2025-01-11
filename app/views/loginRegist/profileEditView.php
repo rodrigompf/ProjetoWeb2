@@ -7,7 +7,7 @@
     <title>Edit Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-[rgb(247,246,223)]">
 
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Edit Profile</h1>
@@ -28,10 +28,6 @@
 
             <label for="address" class="block text-gray-700">Address:</label>
             <textarea id="address" name="address" class="w-full p-2 border border-gray-300 rounded-md"><?php echo htmlspecialchars($user['address']); ?></textarea><br><br>
-
-            <!-- File Upload for Profile Image -->
-            <label for="profile_image" class="block text-gray-700">Profile Image:</label>
-            <input type="file" id="profile_image" name="profile_image" accept="image/*" class="w-full p-2 border border-gray-300 rounded-md"><br><br>
 
             <input type="submit" value="Update Profile" class="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 transition">
         </form>

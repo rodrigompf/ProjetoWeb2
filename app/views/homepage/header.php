@@ -41,11 +41,13 @@
                     </span>
                 </a>
 
-                <a href="/profile" class="relative">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a5 5 0 015 5v1h3a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V10a2 2 0 012-2h3V7a5 5 0 015-5z" />
-    </svg>
-</a>
+                <!-- Link para o perfil, com verificação de login -->
+                <a href="<?php echo isset($_SESSION['user']) && $_SESSION['user'] ? '/profile' : 'javascript:alert(\'Por favor efetue o login para acessar o perfil.\')'; ?>" class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12zM12 14c-4.418 0-8 2.015-8 4.5V21h16v-2.5c0-2.485-3.582-4.5-8-4.5z" />
+                    </svg>
+                </a>
+
                 <!-- Verificação se o utilizador está logado -->
                 <?php if (isset($_SESSION['user']) && $_SESSION['user']): ?>
                     <!-- Botão de Logout -->

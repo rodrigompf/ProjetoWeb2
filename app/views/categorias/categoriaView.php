@@ -120,7 +120,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
                     <!-- Imagem do produto -->
                     <img
-                        src="<?php echo htmlspecialchars($produto['imagem']); ?>"
+                        src="/<?php echo htmlspecialchars($produto['imagem']); ?>"
                         alt="<?php echo htmlspecialchars($produto['nome']); ?>"
                         class="w-full h-48 object-cover">
 
